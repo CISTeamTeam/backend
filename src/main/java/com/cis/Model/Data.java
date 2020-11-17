@@ -2,19 +2,20 @@ package com.cis.Model;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Data {
 
     private static Data instance = null;
 
-    private HashMap<String, User> users;
-    private HashMap<String, Post> posts;
-    private HashMap<String, Comment> comments;
+    private Map<String, User> users;
+    private Map<String, Post> posts;
+    private Map<String, Comment> comments;
 
     private Data() {
-        this.users = (HashMap<String, User>) Collections.synchronizedMap(new HashMap<String, User>());
-        this.posts = (HashMap<String, Post>) Collections.synchronizedMap(new HashMap<String, Post>());
-        this.comments = (HashMap<String, Comment>) Collections.synchronizedMap(new HashMap<String, Comment>());
+        this.users = Collections.synchronizedMap(new HashMap<>());
+        this.posts = Collections.synchronizedMap(new HashMap<>());
+        this.comments = Collections.synchronizedMap(new HashMap<>());
     }
 
     public static Data getInstance() {
@@ -28,7 +29,7 @@ public class Data {
         return instance;
     }
 
-    public HashMap<String, User> getUsers() {
+    public Map<String, User> getUsers() {
         return users;
     }
 
@@ -36,7 +37,7 @@ public class Data {
         this.users.put(user.getId(), user);
     }
 
-    public HashMap<String, Post> getPosts() {
+    public Map<String, Post> getPosts() {
         return posts;
     }
 
@@ -44,7 +45,7 @@ public class Data {
         this.posts.put(post.getId(), post);
     }
 
-    public HashMap<String, Comment> getComments() {
+    public Map<String, Comment> getComments() {
         return comments;
     }
 
@@ -53,8 +54,8 @@ public class Data {
     }
 
     public void clearData() {
-        this.users = (HashMap<String, User>) Collections.synchronizedMap(new HashMap<String, User>());
-        this.posts = (HashMap<String, Post>) Collections.synchronizedMap(new HashMap<String, Post>());
-        this.comments = (HashMap<String, Comment>) Collections.synchronizedMap(new HashMap<String, Comment>());
+        this.users = Collections.synchronizedMap(new HashMap<>());
+        this.posts = Collections.synchronizedMap(new HashMap<>());
+        this.comments = Collections.synchronizedMap(new HashMap<>());
     }
 }

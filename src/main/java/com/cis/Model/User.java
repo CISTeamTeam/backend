@@ -1,9 +1,6 @@
 package com.cis.Model;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class User {
 
@@ -12,9 +9,9 @@ public class User {
     private String name;
     private String bio;
     private String profilePictureURL;
-    private TreeSet<String> posts;
-    private LinkedHashSet<String> followers;
-    private LinkedHashSet<String> following;
+    private SortedSet<String> posts;
+    private Set<String> followers;
+    private Set<String> following;
 
     class SortPostByTime implements Comparator<String> {
         @Override
@@ -27,9 +24,9 @@ public class User {
     }
 
     public User() {
-        this.posts = (TreeSet<String>) Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
-        this.followers = (LinkedHashSet<String>) Collections.synchronizedSet(new LinkedHashSet<String>());
-        this.following = (LinkedHashSet<String>) Collections.synchronizedSet(new LinkedHashSet<String>());
+        this.posts = Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
+        this.followers = Collections.synchronizedSet(new LinkedHashSet<>());
+        this.following = Collections.synchronizedSet(new LinkedHashSet<>());
     }
 
     public User(String id, String username, String name, String bio, String profilePictureURL) {
@@ -38,9 +35,9 @@ public class User {
         this.name = name;
         this.bio = bio;
         this.profilePictureURL = profilePictureURL;
-        this.posts = (TreeSet<String>) Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
-        this.followers = (LinkedHashSet<String>) Collections.synchronizedSet(new LinkedHashSet<String>());
-        this.following = (LinkedHashSet<String>) Collections.synchronizedSet(new LinkedHashSet<String>());
+        this.posts = Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
+        this.followers = Collections.synchronizedSet(new LinkedHashSet<>());
+        this.following = Collections.synchronizedSet(new LinkedHashSet<>());
     }
 
     public String getId() {
@@ -79,7 +76,7 @@ public class User {
         this.profilePictureURL = profilePictureURL;
     }
 
-    public TreeSet<String> getPosts() {
+    public SortedSet<String> getPosts() {
         return posts;
     }
 
@@ -87,7 +84,7 @@ public class User {
         this.posts.add(post);
     }
 
-    public LinkedHashSet<String> getFollowers() {
+    public Set<String> getFollowers() {
         return followers;
     }
 
@@ -99,7 +96,7 @@ public class User {
         this.followers.remove(user);
     }
 
-    public LinkedHashSet<String> getFollowing() {
+    public Set<String> getFollowing() {
         return following;
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Post {
 
@@ -15,11 +16,11 @@ public class Post {
     private int creationDate;
     private ArrayList<String> comments;
     @JsonIgnore
-    private HashMap<String, Integer> ratings;
+    private Map<String, Integer> ratings;
 
     public Post() {
         this.comments = (ArrayList<String>) Collections.synchronizedList(new ArrayList<String>());
-        this.ratings = (HashMap<String, Integer>) Collections.synchronizedMap(new HashMap<String, Integer>());
+        this.ratings = Collections.synchronizedMap(new HashMap<>());
     }
 
     public Post(String id, String authorID, String url, String description, int creationDate) {
@@ -29,7 +30,7 @@ public class Post {
         this.description = description;
         this.creationDate = creationDate;
         this.comments = (ArrayList<String>) Collections.synchronizedList(new ArrayList<String>());
-        this.ratings = (HashMap<String, Integer>) Collections.synchronizedMap(new HashMap<String, Integer>());
+        this.ratings = Collections.synchronizedMap(new HashMap<>());
     }
 
     public String getId() {
