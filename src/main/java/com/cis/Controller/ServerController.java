@@ -1,19 +1,23 @@
 package com.cis.Controller;
 
+import com.cis.Model.Data;
 import com.cis.Model.HTTPServerListener;
 import com.cis.Model.Request;
+import com.cis.Model.User;
 import com.cis.Utils.Constants;
 import com.cis.Utils.HTTPServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.HashMap;
-
 public class ServerController implements HTTPServerListener {
 
-    public static ServerController instance = null;
+    private static ServerController instance = null;
 
-    private ServerController() {}
+    private Data data;
+
+    private ServerController() {
+        data = Data.getInstance();
+    }
 
     public static ServerController server() {
         if (instance == null) {
@@ -23,17 +27,22 @@ public class ServerController implements HTTPServerListener {
     }
 
     @Override
-    public String handleRequest(Request request) throws JsonProcessingException {
-        HashMap<String, String> output = new HashMap<String, String>();
-
-        if (request.getPath().equals(Constants.PING)) {
-            output.put("ping", "ping");
+    public String handleRequest(Request request) {
+        if (request.getPath().equals(Constants.GET_USER)) {
+            String id = (String) request.getParam(Constants.ID_PARAM);
+            User user = data.getUsers().get(id);
+            try {
+                return new ObjectMapper().writeValueAsString(user);
+            }
+            catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
-
-        return new ObjectMapper().writeValueAsString(output);
+        return null;
     }
 
     public static void main(String[] args) {
+        Data.getInstance();
         HTTPServer server = new HTTPServer(ServerController.server(), Constants.PORT);
         server.start();
     }

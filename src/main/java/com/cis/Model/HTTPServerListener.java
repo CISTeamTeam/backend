@@ -1,7 +1,7 @@
 package com.cis.Model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.HashMap;
 
 public interface HTTPServerListener {
-    String handleRequest(Request request) throws JsonProcessingException;
+    String handleRequest(Request request);
 }

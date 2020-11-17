@@ -47,30 +47,29 @@ public class ServerThread extends Thread{
 
             try {
                 Request request = new Request(header, payload);
-                String responseBody = listener.handleRequest(request);
-
-                writer.println("HTTP/1.1 200 OK\r\n" +
-                                       "ContentType: text/plain\r\n" +
-                                       "\r\n" +
-                                       responseBody + "\r\n" +
-                                       "\r\n");
+                writer.println("HTTP/1.1 200 OK\r\n\r\n" + listener.handleRequest(request));
             }
             catch (JsonProcessingException e){
-                HashMap<String, String> errorMap = new HashMap<String, String>();
-                errorMap.put("error", Constants.JSONError);
-                String error = new ObjectMapper().writeValueAsString(errorMap);
-
-                writer.println("HTTP/1.1 400 Bad Request\r\n" +
-                                       "ContentType: text/plain\r\n" +
-                                       "\r\n" +
-                                       error + "\r\n" +
-                                       "\r\n");
+                writer.println(sendError(Constants.JSONError));
             }
 
             socket.close();
         }
         catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private String sendError(String errorMessage) {
+        try {
+            HashMap<String, String> errorMap = new HashMap<String, String>();
+            errorMap.put("error", errorMessage);
+            String error = new ObjectMapper().writeValueAsString(errorMap);
+            return "HTTP/1.1 400 Bad Request\r\n\r\n" + error;
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
