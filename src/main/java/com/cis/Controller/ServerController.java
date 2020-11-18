@@ -47,7 +47,7 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String getUserPoints(Request request) {
-        
+        return null;
     }
 
 
