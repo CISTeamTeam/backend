@@ -34,7 +34,7 @@ public class ServerController implements HTTPServerListener {
         return null;
     }
 
-    private String getUser(Request request){
+    private String getUser(Request request) {
         String id = (String) request.getParam(Constants.ID_PARAM);
         User user = data.getUsers().get(id);
         try {
@@ -44,6 +44,10 @@ public class ServerController implements HTTPServerListener {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private String getUserPoints(Request request) {
+        
     }
 
 
