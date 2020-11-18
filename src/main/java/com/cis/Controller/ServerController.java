@@ -36,6 +36,7 @@ public class ServerController implements HTTPServerListener {
             case Constants.SPEND_POINTS: return spendPoints(request);
             case Constants.GET_POST_POINTS: return getPostPoints(request);
             case Constants.GET_COMMENT: return getComment(request);
+            case Constants.POST_COMMENT: return postComment(request);
         }
         return null;
     }
