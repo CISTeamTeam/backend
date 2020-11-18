@@ -67,23 +67,37 @@ public class ServerController implements HTTPServerListener {
         String userID = (String) request.getParam(Constants.USER_ID_PARAM);
         String hash = (String) request.getParam(Constants.PAGING_HASH);
         User user = data.getUsers().get(userID);
+        ArrayList<String> topPosts = new ArrayList<>();
+        TreeSet<String> posts;
         if (hash == null) {
             hash = UUID.randomUUID().toString();
-            TreeSet<String> posts = (TreeSet<String>) ((TreeSet<String>) user.getUnreadPosts()).clone();
-            ArrayList<String> topPosts = new ArrayList<>();
-            for (int i = 0; i < 10; i++) {
-                String post = ""
-                if (post = posts.pollFirst())
-                topPosts.add();
-            }
-            posts.removeAll(topPosts);
-            if (posts.size() > 0) {
-                user.addPagingRequest(hash, posts);
-            }
+            posts = (TreeSet<String>) ((TreeSet<String>) user.getUnreadPosts()).clone();
         }
         else {
-
+            posts = (TreeSet<String>) user.getTrackPaging().get(hash);
         }
+        for (int i = 0; i < 10; i++) {
+            String post;
+            if ((post = posts.pollFirst()) == null) {
+                break;
+            }
+            topPosts.add(post);
+        }
+        if (posts.size() > 0) {
+            user.putPagingRequest(hash, posts);
+        }
+        else {
+            user.removePagingRequest(hash);
+        }
+        String postsJson = "";
+        try {
+            postsJson = new ObjectMapper().writeValueAsString(topPosts);
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return "{ \"hash\": \"" + userID + "\", " +
+                 "\"posts\": " + postsJson + " }";
     }
 
     private String getUser(Request request) {

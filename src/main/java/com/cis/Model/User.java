@@ -108,7 +108,7 @@ public class User {
         return trackPaging;
     }
 
-    public void addPagingRequest(String pagingHash, Set<String> posts) {
+    public void putPagingRequest(String pagingHash, Set<String> posts) {
         this.trackPaging.put(pagingHash, posts);
     }
 
