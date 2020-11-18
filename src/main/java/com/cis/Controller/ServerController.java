@@ -51,6 +51,11 @@ public class ServerController implements HTTPServerListener {
         return Constants.FAILURE;
     }
 
+
+    /* ------------- */
+    /* Post Requests */
+    /* ------------- */
+
     private String getPost(Request request) {
         String id = (String) request.getParam(Constants.ID_PARAM);
         Post post = data.getPosts().get(id);
@@ -99,6 +104,23 @@ public class ServerController implements HTTPServerListener {
         return "{ \"hash\": \"" + userID + "\", " +
                  "\"posts\": " + postsJson + " }";
     }
+    
+    private String getPostPoints(Request request) {
+        try {
+            String id = (String) request.getParam(Constants.ID_PARAM);
+            int points = data.getPosts().get(id).getRating();
+            return "{\"points\":"+points+"}";
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return Constants.FAILURE;
+    }
+
+
+    /* ------------- */
+    /* User Requests */
+    /* ------------- */
 
     private String getUser(Request request) {
         String id = (String) request.getParam(Constants.ID_PARAM);
@@ -179,17 +201,10 @@ public class ServerController implements HTTPServerListener {
         return Constants.FAILURE;
     }
 
-    private String getPostPoints(Request request) {
-        try {
-            String id = (String) request.getParam(Constants.ID_PARAM);
-            int points = data.getPosts().get(id).getRating();
-            return "{\"points\":"+points+"}";
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        return Constants.FAILURE;
-    }
+
+    /* ---------------- */
+    /* Comment Requests */
+    /* ---------------- */
 
     private String getComment(Request request){
         try {
