@@ -1,9 +1,6 @@
 package com.cis.Controller;
 
-import com.cis.Model.Data;
-import com.cis.Model.HTTPServerListener;
-import com.cis.Model.Request;
-import com.cis.Model.User;
+import com.cis.Model.*;
 import com.cis.Utils.Constants;
 import com.cis.Utils.HTTPServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,6 +35,7 @@ public class ServerController implements HTTPServerListener {
             case Constants.UPDATE_USER_ATTRIBUTE: return updateUserAttribute(request);
             case Constants.SPEND_POINTS: return spendPoints(request);
             case Constants.GET_POST_POINTS: return getPostPoints(request);
+            case Constants.GET_COMMENT: return getComment(request);
         }
         return null;
     }
@@ -141,6 +139,18 @@ public class ServerController implements HTTPServerListener {
             int points = data.getPosts().get(id).getRating();
             return "{\"points\":"+points+"}";
         }catch(Exception e){
+            e.printStackTrace();
+        }
+        return Constants.FAILURE;
+    }
+
+    private String getComment(Request request){
+        try {
+            String id = (String) request.getParam(Constants.ID_PARAM);
+            Comment comment = data.getComments().get(id);
+            return new ObjectMapper().writeValueAsString(comment);
+
+        }catch (Exception e){
             e.printStackTrace();
         }
         return Constants.FAILURE;
