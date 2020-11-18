@@ -1,5 +1,7 @@
 package com.cis.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.*;
 
 public class User {
@@ -12,7 +14,8 @@ public class User {
     private SortedSet<String> posts;
     private Set<String> followers;
     private Set<String> following;
-
+    @JsonIgnore
+    private int points;
 
     class SortPostByTime implements Comparator<String> {
         @Override
@@ -28,9 +31,10 @@ public class User {
         this.posts = Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
         this.followers = Collections.synchronizedSet(new LinkedHashSet<>());
         this.following = Collections.synchronizedSet(new LinkedHashSet<>());
+        this.points = 0;
     }
 
-    public User(String id, String username, String name, String bio, String profilePictureURL) {
+    public User(String id, String username, String name, String bio, String profilePictureURL, int points) {
         this.id = id;
         this.username = username;
         this.name = name;
@@ -39,6 +43,7 @@ public class User {
         this.posts = Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
         this.followers = Collections.synchronizedSet(new LinkedHashSet<>());
         this.following = Collections.synchronizedSet(new LinkedHashSet<>());
+        this.points = points;
     }
 
     public String getId() {
@@ -107,5 +112,17 @@ public class User {
 
     public void removeFollowing(String user) {
         this.following.remove(user);
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void addPoints(int points) {
+        this.points += points;
+    }
+
+    public void subtractPoints(int points) {
+        this.points -= points;
     }
 }
