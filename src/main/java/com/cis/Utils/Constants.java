@@ -15,7 +15,7 @@ public class Constants {
     public static final String GET_DISCOUNTS = "/getDiscounts";
     public static final String CREATE_USER = "/createUser";
     public static final String UPDATE_USER = "/updateUser";
-    public static final String UPDATE_USER_ATTRIBUTE = "/updateUserAttribute";
+    public static final String UPDATE_USER_ATTRIBUTE = "/updateUser";
     public static final String GET_COMMENT = "/getComment";
     public static final String POST_COMMENT = "/postComment";
 

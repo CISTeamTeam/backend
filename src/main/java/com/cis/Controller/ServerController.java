@@ -32,7 +32,7 @@ public class ServerController implements HTTPServerListener {
             case Constants.GET_USER: return getUser(request);
             case Constants.GET_USER_POINTS: return getUserPoints(request);
             case Constants.CREATE_USER: return createUser(request);
-            case Constants.UPDATE_USER_ATTRIBUTE: return updateUserAttribute(request);
+            case Constants.UPDATE_USER: return updateUser(request);
             case Constants.SPEND_POINTS: return spendPoints(request);
             case Constants.GET_POST_POINTS: return getPostPoints(request);
             case Constants.GET_COMMENT: return getComment(request);
@@ -84,30 +84,22 @@ public class ServerController implements HTTPServerListener {
         return Constants.FAILURE;
     }
 
-    private String updateUserAttribute(Request request){
+    private String updateUser(Request request){
         try {
             String id = (String) request.getParam(Constants.ID_PARAM);
-            String attribute = (String) request.getParam(Constants.ATTRIBUTE_PARAM);
-            String newValue = (String) request.getParam(Constants.NEW_PARAM);
+            String bio = (String) request.getParam(Constants.BIO_PARAM);
+            String pfpurl = (String) request.getParam(Constants.PFP_URL_PARAM);
+            String username = (String) request.getParam(Constants.USERNAME_PARAM);
+            String name = (String) request.getParam(Constants.NAME_PARAM);
 
             User user = data.getUsers().get(id);
 
-            switch(attribute){
-                case "bio":
-                    user.setBio(newValue);
-                    return Constants.SUCCESS;
-                case "profilePictureURL":
-                    user.setProfilePictureURL(newValue);
-                    return Constants.SUCCESS;
-                case "username":
-                    user.setUsername(newValue);
-                    return Constants.SUCCESS;
-                case "name":
-                    user.setName(newValue);
-                    return Constants.SUCCESS;
-                default:
-                    return Constants.FAILURE;
-            }
+            user.setBio(bio);
+            user.setProfilePictureURL(pfpurl);
+            user.setUsername(username);
+            user.setName(name);
+
+            return Constants.SUCCESS;
 
         }catch(Exception e){
             e.printStackTrace();
