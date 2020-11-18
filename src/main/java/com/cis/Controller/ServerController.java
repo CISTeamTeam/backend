@@ -29,17 +29,23 @@ public class ServerController implements HTTPServerListener {
     @Override
     public String handleRequest(Request request) {
         if (request.getPath().equals(Constants.GET_USER)) {
-            String id = (String) request.getParam(Constants.ID_PARAM);
-            User user = data.getUsers().get(id);
-            try {
-                return new ObjectMapper().writeValueAsString(user);
-            }
-            catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+            return getUser(request);
         }
         return null;
     }
+
+    private String getUser(Request request){
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        User user = data.getUsers().get(id);
+        try {
+            return new ObjectMapper().writeValueAsString(user);
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     public static void main(String[] args) {
         Data.getInstance();
