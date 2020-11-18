@@ -29,10 +29,20 @@ public class ServerController implements HTTPServerListener {
     @Override
     public String handleRequest(Request request) {
         switch(request.getPath()){
-            case Constants.GET_USER: return getUser(request);
             case Constants.AUTH: return authenticate(request);
+            case Constants.GET_USER: return getUser(request);
+            case Constants.GET_USER_POINTS: return getUserPoints(request);
         }
         return null;
+    }
+
+    private String authenticate(Request request){
+        String id = (String) request.getParam(Constants.ID_PARAM);
+
+        if(data.getUsers().containsKey(id)){
+            return Constants.SUCCESS;
+        }
+        return Constants.FAILURE;
     }
 
     private String getUser(Request request) {
@@ -47,17 +57,10 @@ public class ServerController implements HTTPServerListener {
         }
     }
 
-    private String authenticate(Request request){
-        String id = (String) request.getParam(Constants.ID_PARAM);
-
-        if(data.getUsers().containsKey(id)){
-            return Constants.SUCCESS;
-        }
-        return Constants.FAILURE;
-    }
-
     private String getUserPoints(Request request) {
-        return null;
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        int points = data.getUsers().get(id).getPoints();
+        return "{ \"userID\": " + id + ", \"points\": " + points + " }";
     }
 
 
