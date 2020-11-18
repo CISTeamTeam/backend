@@ -13,7 +13,7 @@ public class Post {
     private String authorID;
     private String url;
     private String description;
-    private int creationDate;
+    private double creationDate;
     private ArrayList<String> comments;
     @JsonIgnore
     private Map<String, Integer> ratings;
@@ -23,7 +23,7 @@ public class Post {
         this.ratings = Collections.synchronizedMap(new HashMap<>());
     }
 
-    public Post(String id, String authorID, String url, String description, int creationDate) {
+    public Post(String id, String authorID, String url, String description, double creationDate) {
         this.id = id;
         this.authorID = authorID;
         this.url = url;
@@ -49,7 +49,7 @@ public class Post {
         return description;
     }
 
-    public int getCreationDate() {
+    public double getCreationDate() {
         return creationDate;
     }
 

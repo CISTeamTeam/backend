@@ -2,8 +2,10 @@ package com.cis.Utils;
 
 public class Constants {
     public static final int PORT = 8000;
+    public static final String ANONYMOUS_USER = "anonymousUser";
 
     // Paths
+    public static final String CLEAR_DATA = "/clearData";
     public static final String GET_POST = "/getPost";
     public static final String GET_POSTS = "/getPosts";
     public static final String CREATE_POST = "/createPost";
@@ -30,9 +32,12 @@ public class Constants {
     public static final String URL_PARAM = "url";
     public static final String PFP_URL_PARAM = "profilePictureURL";
     public static final String USERNAME_PARAM = "username";
-    public static final String POSTS_PARAM = "posts";
     public static final String NAME_PARAM =  "name";
     public static final String POINTS_PARAM = "points";
+    public static final String TEXT_PARAM = "text";
+    public static final String CREATION_DATE = "creationDate";
+    public static final String DESCRIPTION_PARAM = "description";
+    public static final String RATING_PARAM = "rating";
 
     // Status
     public static final String SUCCESS = "{\"status\":\"success\"}";

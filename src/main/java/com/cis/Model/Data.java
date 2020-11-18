@@ -1,7 +1,10 @@
 package com.cis.Model;
 
+import com.cis.Utils.Constants;
+
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Data {
@@ -12,15 +15,18 @@ public class Data {
     private Map<String, Post> posts;
     private Map<String, Comment> comments;
 
+    private User anonymousUser;
+
     private Data() {
         this.users = Collections.synchronizedMap(new HashMap<>());
-        this.posts = Collections.synchronizedMap(new HashMap<>());
+        this.posts = Collections.synchronizedMap(new LinkedHashMap<>());
         this.comments = Collections.synchronizedMap(new HashMap<>());
     }
 
     public static Data getInstance() {
         if (instance == null) {
             instance = new Data();
+            instance.addUser(new User(Constants.ANONYMOUS_USER, "anon", "anon", "anon", null, 0));
         }
         return instance;
     }
@@ -53,5 +59,6 @@ public class Data {
         this.users = Collections.synchronizedMap(new HashMap<>());
         this.posts = Collections.synchronizedMap(new HashMap<>());
         this.comments = Collections.synchronizedMap(new HashMap<>());
+        instance.addUser(new User(Constants.ANONYMOUS_USER, "anon", "anon", "anon", null, 0));
     }
 }

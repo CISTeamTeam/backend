@@ -5,8 +5,6 @@ import com.cis.Utils.Constants;
 import com.cis.Utils.HTTPServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.tools.internal.jxc.ap.Const;
-import sun.jvm.hotspot.utilities.ConstantTag;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -33,13 +31,19 @@ public class ServerController implements HTTPServerListener {
     public String handleRequest(Request request) {
         try {
             switch(request.getPath()){
+                case Constants.CLEAR_DATA: return clearData(request);
+                case Constants.GET_POST: return getPost(request);
+                case Constants.GET_POSTS: return getPosts(request);
+                case Constants.CREATE_POST: return createPost(request);
+                case Constants.READ_POST: return readPost(request);
+                case Constants.RATE_POST: return ratePost(request);
+                case Constants.GET_POST_POINTS: return getPostPoints(request);
                 case Constants.AUTH: return authenticate(request);
                 case Constants.GET_USER: return getUser(request);
-                case Constants.GET_USER_POINTS: return getUserPoints(request);
                 case Constants.CREATE_USER: return createUser(request);
                 case Constants.UPDATE_USER: return updateUser(request);
+                case Constants.GET_USER_POINTS: return getUserPoints(request);
                 case Constants.SPEND_POINTS: return spendPoints(request);
-                case Constants.GET_POST_POINTS: return getPostPoints(request);
                 case Constants.GET_COMMENT: return getComment(request);
                 case Constants.POST_COMMENT: return postComment(request);
             }
@@ -48,6 +52,11 @@ public class ServerController implements HTTPServerListener {
             e.printStackTrace();
         }
         return Constants.FAILURE;
+    }
+
+    private String clearData(Request request) {
+        data.clearData();
+        return Constants.SUCCESS;
     }
 
 
@@ -70,16 +79,26 @@ public class ServerController implements HTTPServerListener {
     private String getPosts(Request request) {
         String userID = (String) request.getParam(Constants.USER_ID_PARAM);
         String hash = (String) request.getParam(Constants.PAGING_HASH);
-        User user = data.getUsers().get(userID);
         ArrayList<String> topPosts = new ArrayList<>();
         TreeSet<String> posts;
-        if (hash == null) {
+        User user;
+
+        if (userID != null) {
+            user = data.getUsers().get(userID);
+
+        }
+        else {
+            user = data.getUsers().get(Constants.ANONYMOUS_USER);
+        }
+
+        if (hash != null) {
+            posts = (TreeSet<String>) user.getTrackPaging().get(hash);
+        }
+        else {
             hash = UUID.randomUUID().toString();
             posts = (TreeSet<String>) ((TreeSet<String>) user.getUnreadPosts()).clone();
         }
-        else {
-            posts = (TreeSet<String>) user.getTrackPaging().get(hash);
-        }
+
         for (int i = 0; i < 10; i++) {
             String post;
             if ((post = posts.pollFirst()) == null) {
@@ -104,13 +123,53 @@ public class ServerController implements HTTPServerListener {
                  "\"posts\": " + postsJson + " }";
     }
 
-//    private String createPost(Request request) {
-//        String id = (String) request.getParam(Constants.ID_PARAM);
-//        String description = (String) request.getParam(Constants.)
-//    }
+    private String createPost(Request request) {
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        String userID = (String) request.getParam(Constants.USER_ID_PARAM);
+        String imageURL = (String) request.getParam(Constants.URL_PARAM);
+        String description = (String) request.getParam(Constants.DESCRIPTION_PARAM);
+        double creationDate = (Double) request.getParam(Constants.CREATION_DATE);
+
+        Post post = new Post(id, userID, imageURL, description, creationDate);
+
+        if (data.getPosts().containsKey(id)) {
+            return Constants.FAILURE;
+        }
+        data.addPost(post);
+        data.getUsers().get(userID).addPost(post.getId());
+        for (String otherUserID : data.getUsers().keySet()) {
+            User otherUser = data.getUsers().get(otherUserID);
+            otherUser.addUnreadPost(post.getId());
+        }
+        return Constants.SUCCESS;
+    }
+
+    private String readPost(Request request) {
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        String userID = (String) request.getParam(Constants.USER_ID_PARAM);
+
+        User user = data.getUsers().get(userID);
+        user.removeUnreadPost(id);
+
+        return Constants.SUCCESS;
+    }
+
+    private String ratePost(Request request) {
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        String userID = (String) request.getParam(Constants.USER_ID_PARAM);
+        int rating = (Integer) request.getParam(Constants.RATING_PARAM);
+
+        User user = data.getUsers().get(userID);
+        Post post = data.getPosts().get(id);
+
+        post.addRating(user.getId(), rating);
+
+        return Constants.SUCCESS;
+    }
 
     private String getPostPoints(Request request) {
         String id = (String) request.getParam(Constants.ID_PARAM);
+
         int points = data.getPosts().get(id).getRating();
         return "{\"points\":"+points+"}";
     }
@@ -122,6 +181,7 @@ public class ServerController implements HTTPServerListener {
 
     private String authenticate(Request request){
         String id = (String) request.getParam(Constants.ID_PARAM);
+
         if(data.getUsers().containsKey(id)){
             return Constants.SUCCESS;
         }
@@ -130,6 +190,7 @@ public class ServerController implements HTTPServerListener {
 
     private String getUser(Request request) {
         String id = (String) request.getParam(Constants.ID_PARAM);
+
         User user = data.getUsers().get(id);
         try {
             return new ObjectMapper().writeValueAsString(user);
@@ -175,13 +236,15 @@ public class ServerController implements HTTPServerListener {
 
     private String getUserPoints(Request request) {
         String id = (String) request.getParam(Constants.ID_PARAM);
+
         int points = data.getUsers().get(id).getPoints();
         return "{ \"userID\": " + id + ", \"points\": " + points + " }";
     }
 
     private String spendPoints(Request request) {
         String id = (String) request.getParam(Constants.ID_PARAM);
-        int pointsSpent = (int) request.getParam(Constants.POINTS_PARAM);
+        int pointsSpent = (Integer) request.getParam(Constants.POINTS_PARAM);
+
         User user = data.getUsers().get(id);
         user.subtractPoints(pointsSpent);
         return Constants.SUCCESS;
@@ -194,6 +257,7 @@ public class ServerController implements HTTPServerListener {
 
     private String getComment(Request request){
         String id = (String) request.getParam(Constants.ID_PARAM);
+
         Comment comment = data.getComments().get(id);
         try {
             return new ObjectMapper().writeValueAsString(comment);
@@ -206,11 +270,12 @@ public class ServerController implements HTTPServerListener {
 
     private String postComment(Request request){
         String id = (String) request.getParam(Constants.ID_PARAM);
-        String authorId = (String) request.getParam("authorID");
-        String postId = (String) request.getParam("postID");
-        String text = (String) request.getParam("text");
+        String authorId = (String) request.getParam(Constants.USER_ID_PARAM);
+        String postId = (String) request.getParam(Constants.POST_ID_PARAM);
+        String text = (String) request.getParam(Constants.TEXT_PARAM);
+        double creationDate = (Double) request.getParam(Constants.CREATION_DATE);
 
-        Comment comment = new Comment(id, authorId, postId, text);
+        Comment comment = new Comment(id, authorId, postId, text, creationDate);
         data.addComment(comment);
 
         return Constants.SUCCESS;

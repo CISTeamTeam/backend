@@ -6,14 +6,16 @@ public class Comment {
     private String authorID;
     private String postID;
     private String text;
+    private double creationDate;
 
     public Comment() { }
 
-    public Comment(String id, String authorID, String postID, String text) {
+    public Comment(String id, String authorID, String postID, String text, double creationDate) {
         this.id = id;
         this.authorID = authorID;
         this.postID = postID;
         this.text = text;
+        this.creationDate = creationDate;
     }
 
     public String getId() {
@@ -30,5 +32,9 @@ public class Comment {
 
     public String getText() {
         return text;
+    }
+
+    public double getCreationDate() {
+        return creationDate;
     }
 }
