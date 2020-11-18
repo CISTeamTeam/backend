@@ -37,6 +37,7 @@ public class ServerController implements HTTPServerListener {
             case Constants.CREATE_USER: return createUser(request);
             case Constants.UPDATE_USER_ATTRIBUTE: return updateUserAttribute(request);
             case Constants.SPEND_POINTS: return spendPoints(request);
+            case Constants.GET_POST_POINTS: return getPostPoints(request);
         }
         return null;
     }
@@ -134,6 +135,16 @@ public class ServerController implements HTTPServerListener {
         return Constants.FAILURE;
     }
 
+    private String getPostPoints(Request request) {
+        try {
+            String id = (String) request.getParam(Constants.ID_PARAM);
+            int points = data.getPosts().get(id).getRating();
+            return "{\"points\":"+points+"}";
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return Constants.FAILURE;
+    }
 
     public static void main(String[] args) {
         Data.getInstance();
