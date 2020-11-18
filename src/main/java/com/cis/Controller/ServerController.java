@@ -28,8 +28,8 @@ public class ServerController implements HTTPServerListener {
 
     @Override
     public String handleRequest(Request request) {
-        if (request.getPath().equals(Constants.GET_USER)) {
-            return getUser(request);
+        switch(request.getPath()){
+            case Constants.GET_USER: return getUser(request);
         }
         return null;
     }
