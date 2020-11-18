@@ -16,7 +16,8 @@ public class Constants {
 
     // Params
     public static final String ID_PARAM = "id";
-
+    public static final String USER_ID_PARAM = "userID";
+    public static final String PAGING_HASH = "hash";
 
     // Status
     public static final String SUCCESS = "{\"status\":\"success\"}";

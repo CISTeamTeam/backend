@@ -1,13 +1,12 @@
 package com.cis.Controller;
 
-import com.cis.Model.Data;
-import com.cis.Model.HTTPServerListener;
-import com.cis.Model.Request;
-import com.cis.Model.User;
+import com.cis.Model.*;
 import com.cis.Utils.Constants;
 import com.cis.Utils.HTTPServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.*;
 
 public class ServerController implements HTTPServerListener {
 
@@ -38,11 +37,45 @@ public class ServerController implements HTTPServerListener {
 
     private String authenticate(Request request){
         String id = (String) request.getParam(Constants.ID_PARAM);
-
         if(data.getUsers().containsKey(id)){
             return Constants.SUCCESS;
         }
         return Constants.FAILURE;
+    }
+
+    private String getPost(Request request) {
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        Post post = data.getPosts().get(id);
+        try {
+            return new ObjectMapper().writeValueAsString(post);
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private String getPosts(Request request) {
+        String userID = (String) request.getParam(Constants.USER_ID_PARAM);
+        String hash = (String) request.getParam(Constants.PAGING_HASH);
+        User user = data.getUsers().get(userID);
+        if (hash == null) {
+            hash = UUID.randomUUID().toString();
+            TreeSet<String> posts = (TreeSet<String>) ((TreeSet<String>) user.getUnreadPosts()).clone();
+            ArrayList<String> topPosts = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                String post = ""
+                if (post = posts.pollFirst())
+                topPosts.add();
+            }
+            posts.removeAll(topPosts);
+            if (posts.size() > 0) {
+                user.addPagingRequest(hash, posts);
+            }
+        }
+        else {
+
+        }
     }
 
     private String getUser(Request request) {

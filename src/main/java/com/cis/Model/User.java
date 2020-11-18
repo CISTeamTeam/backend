@@ -2,10 +2,7 @@ package com.cis.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class User {
 
@@ -15,7 +12,10 @@ public class User {
     private String bio;
     private String profilePictureURL;
     private SortedSet<String> posts;
-
+    @JsonIgnore
+    private SortedSet<String> unreadPosts;
+    @JsonIgnore
+    private Map<String, Set<String>> trackPaging;
     @JsonIgnore
     private int points;
 
@@ -25,12 +25,14 @@ public class User {
             Post post1 = Data.getInstance().getPosts().get(postUID1);
             Post post2 = Data.getInstance().getPosts().get(postUID2);
 
-            return post1.getCreationDate() - post2.getCreationDate();
+            return post2.getCreationDate() - post1.getCreationDate();
         }
     }
 
     public User() {
         this.posts = Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
+        this.unreadPosts = Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
+        this.trackPaging = Collections.synchronizedMap(new HashMap<>());
         this.points = 0;
     }
 
@@ -41,6 +43,8 @@ public class User {
         this.bio = bio;
         this.profilePictureURL = profilePictureURL;
         this.posts = Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
+        this.unreadPosts = Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
+        this.trackPaging = Collections.synchronizedMap(new HashMap<>());
         this.points = points;
     }
 
@@ -86,6 +90,30 @@ public class User {
 
     public void addPost(String post) {
         this.posts.add(post);
+    }
+
+    public SortedSet<String> getUnreadPosts() {
+        return unreadPosts;
+    }
+
+    public void addUnreadPost(String post) {
+        this.unreadPosts.add(post);
+    }
+
+    public void removeUnreadPost(String post) {
+        this.unreadPosts.remove(post);
+    }
+
+    public Map<String, Set<String>> getTrackPaging() {
+        return trackPaging;
+    }
+
+    public void addPagingRequest(String pagingHash, Set<String> posts) {
+        this.trackPaging.put(pagingHash, posts);
+    }
+
+    public void removePagingRequest(String pagingHash) {
+        this.trackPaging.remove(pagingHash);
     }
 
     public int getPoints() {
