@@ -15,6 +15,7 @@ public class Constants {
     public static final String GET_DISCOUNTS = "/getDiscounts";
     public static final String CREATE_USER = "/createUser";
     public static final String UPDATE_USER = "/updateUser";
+    public static final String UPDATE_USER_ATTRIBUTE = "/updateUserAttribute";
 
     // Params
     public static final String ID_PARAM = "id";
@@ -23,6 +24,8 @@ public class Constants {
     public static final String USERNAME_PARAM = "username";
     public static final String POSTS_PARAM = "posts";
     public static final String NAME_PARAM =  "name";
+    public static final String ATTRIBUTE_PARAM = "attribute";
+    public static final String NEW_PARAM = "new";
 
 
     // Status

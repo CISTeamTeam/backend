@@ -35,6 +35,7 @@ public class ServerController implements HTTPServerListener {
             case Constants.GET_USER: return getUser(request);
             case Constants.GET_USER_POINTS: return getUserPoints(request);
             case Constants.CREATE_USER: return createUser(request);
+            case Constants.UPDATE_USER_ATTRIBUTE: return updateUserAttribute(request);
         }
         return null;
     }
@@ -70,8 +71,43 @@ public class ServerController implements HTTPServerListener {
 
             User user = new User(id, bio, profilePictureURL, username, name, 0);
 
+            if(data.getUsers().containsKey(id)){
+                return Constants.FAILURE;
+            }
+
             data.addUser(user);
             return Constants.SUCCESS;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return Constants.FAILURE;
+    }
+
+    private String updateUserAttribute(Request request){
+        try {
+            String id = (String) request.getParam(Constants.ID_PARAM);
+            String attribute = (String) request.getParam(Constants.ATTRIBUTE_PARAM);
+            String newValue = (String) request.getParam(Constants.NEW_PARAM);
+
+            User user = data.getUsers().get(id);
+
+            switch(attribute){
+                case "bio":
+                    user.setBio(newValue);
+                    return Constants.SUCCESS;
+                case "profilePictureURL":
+                    user.setProfilePictureURL(newValue);
+                    return Constants.SUCCESS;
+                case "username":
+                    user.setUsername(newValue);
+                    return Constants.SUCCESS;
+                case "name":
+                    user.setName(newValue);
+                    return Constants.SUCCESS;
+                default:
+                    return Constants.FAILURE;
+            }
+
         }catch(Exception e){
             e.printStackTrace();
         }
