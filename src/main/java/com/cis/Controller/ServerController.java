@@ -5,6 +5,8 @@ import com.cis.Utils.Constants;
 import com.cis.Utils.HTTPServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.tools.internal.jxc.ap.Const;
+import sun.jvm.hotspot.utilities.ConstantTag;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -29,24 +31,21 @@ public class ServerController implements HTTPServerListener {
 
     @Override
     public String handleRequest(Request request) {
-        switch(request.getPath()){
-            case Constants.AUTH: return authenticate(request);
-            case Constants.GET_USER: return getUser(request);
-            case Constants.GET_USER_POINTS: return getUserPoints(request);
-            case Constants.CREATE_USER: return createUser(request);
-            case Constants.UPDATE_USER: return updateUser(request);
-            case Constants.SPEND_POINTS: return spendPoints(request);
-            case Constants.GET_POST_POINTS: return getPostPoints(request);
-            case Constants.GET_COMMENT: return getComment(request);
-            case Constants.POST_COMMENT: return postComment(request);
+        try {
+            switch(request.getPath()){
+                case Constants.AUTH: return authenticate(request);
+                case Constants.GET_USER: return getUser(request);
+                case Constants.GET_USER_POINTS: return getUserPoints(request);
+                case Constants.CREATE_USER: return createUser(request);
+                case Constants.UPDATE_USER: return updateUser(request);
+                case Constants.SPEND_POINTS: return spendPoints(request);
+                case Constants.GET_POST_POINTS: return getPostPoints(request);
+                case Constants.GET_COMMENT: return getComment(request);
+                case Constants.POST_COMMENT: return postComment(request);
+            }
         }
-        return null;
-    }
-
-    private String authenticate(Request request){
-        String id = (String) request.getParam(Constants.ID_PARAM);
-        if(data.getUsers().containsKey(id)){
-            return Constants.SUCCESS;
+        catch(Exception e) {
+            e.printStackTrace();
         }
         return Constants.FAILURE;
     }
@@ -64,7 +63,7 @@ public class ServerController implements HTTPServerListener {
         }
         catch (JsonProcessingException e) {
             e.printStackTrace();
-            return null;
+            return Constants.FAILURE;
         }
     }
 
@@ -104,23 +103,30 @@ public class ServerController implements HTTPServerListener {
         return "{ \"hash\": \"" + userID + "\", " +
                  "\"posts\": " + postsJson + " }";
     }
-    
+
+//    private String createPost(Request request) {
+//        String id = (String) request.getParam(Constants.ID_PARAM);
+//        String description = (String) request.getParam(Constants.)
+//    }
+
     private String getPostPoints(Request request) {
-        try {
-            String id = (String) request.getParam(Constants.ID_PARAM);
-            int points = data.getPosts().get(id).getRating();
-            return "{\"points\":"+points+"}";
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        return Constants.FAILURE;
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        int points = data.getPosts().get(id).getRating();
+        return "{\"points\":"+points+"}";
     }
 
 
     /* ------------- */
     /* User Requests */
     /* ------------- */
+
+    private String authenticate(Request request){
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        if(data.getUsers().containsKey(id)){
+            return Constants.SUCCESS;
+        }
+        return Constants.FAILURE;
+    }
 
     private String getUser(Request request) {
         String id = (String) request.getParam(Constants.ID_PARAM);
@@ -130,55 +136,41 @@ public class ServerController implements HTTPServerListener {
         }
         catch (JsonProcessingException e) {
             e.printStackTrace();
-            return null;
+            return Constants.FAILURE;
         }
     }
 
     private String createUser(Request request){
-        try {
-            String id = (String) request.getParam(Constants.ID_PARAM);
-            String bio = (String) request.getParam(Constants.BIO_PARAM);
-            String profilePictureURL = (String) request.getParam(Constants.PFP_URL_PARAM);
-            String username = (String) request.getParam(Constants.USERNAME_PARAM);
-            String name = (String) request.getParam(Constants.NAME_PARAM);
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        String bio = (String) request.getParam(Constants.BIO_PARAM);
+        String profilePictureURL = (String) request.getParam(Constants.PFP_URL_PARAM);
+        String username = (String) request.getParam(Constants.USERNAME_PARAM);
+        String name = (String) request.getParam(Constants.NAME_PARAM);
 
-            User user = new User(id, bio, profilePictureURL, username, name, 0);
+        User user = new User(id, bio, profilePictureURL, username, name, 0);
 
-            if(data.getUsers().containsKey(id)){
-                return Constants.FAILURE;
-            }
-
-            data.addUser(user);
-            return Constants.SUCCESS;
+        if (data.getUsers().containsKey(id)) {
+            return Constants.FAILURE;
         }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        return Constants.FAILURE;
+        data.addUser(user);
+        return Constants.SUCCESS;
     }
 
     private String updateUser(Request request){
-        try {
-            String id = (String) request.getParam(Constants.ID_PARAM);
-            String bio = (String) request.getParam(Constants.BIO_PARAM);
-            String pfpurl = (String) request.getParam(Constants.PFP_URL_PARAM);
-            String username = (String) request.getParam(Constants.USERNAME_PARAM);
-            String name = (String) request.getParam(Constants.NAME_PARAM);
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        String bio = (String) request.getParam(Constants.BIO_PARAM);
+        String pfpURL = (String) request.getParam(Constants.PFP_URL_PARAM);
+        String username = (String) request.getParam(Constants.USERNAME_PARAM);
+        String name = (String) request.getParam(Constants.NAME_PARAM);
 
-            User user = data.getUsers().get(id);
+        User user = data.getUsers().get(id);
 
-            user.setBio(bio);
-            user.setProfilePictureURL(pfpurl);
-            user.setUsername(username);
-            user.setName(name);
+        user.setBio(bio);
+        user.setProfilePictureURL(pfpURL);
+        user.setUsername(username);
+        user.setName(name);
 
-            return Constants.SUCCESS;
-
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        return Constants.FAILURE;
+        return Constants.SUCCESS;
     }
 
     private String getUserPoints(Request request) {
@@ -188,17 +180,11 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String spendPoints(Request request) {
-        try {
-            String id = (String) request.getParam(Constants.ID_PARAM);
-            int pointsSpent = (int) request.getParam(Constants.POINTS_PARAM);
-            User user = data.getUsers().get(id);
-            user.subtractPoints(pointsSpent);
-            return Constants.SUCCESS;
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        return Constants.FAILURE;
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        int pointsSpent = (int) request.getParam(Constants.POINTS_PARAM);
+        User user = data.getUsers().get(id);
+        user.subtractPoints(pointsSpent);
+        return Constants.SUCCESS;
     }
 
 
@@ -207,36 +193,33 @@ public class ServerController implements HTTPServerListener {
     /* ---------------- */
 
     private String getComment(Request request){
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        Comment comment = data.getComments().get(id);
         try {
-            String id = (String) request.getParam(Constants.ID_PARAM);
-            Comment comment = data.getComments().get(id);
             return new ObjectMapper().writeValueAsString(comment);
-
         }
-        catch (Exception e) {
+        catch (JsonProcessingException e) {
             e.printStackTrace();
+            return Constants.FAILURE;
         }
-        return Constants.FAILURE;
     }
 
     private String postComment(Request request){
-        try {
-            String id = (String) request.getParam(Constants.ID_PARAM);
-            String authorId = (String) request.getParam("authorID");
-            String postId = (String) request.getParam("postID");
-            String text = (String) request.getParam("text");
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        String authorId = (String) request.getParam("authorID");
+        String postId = (String) request.getParam("postID");
+        String text = (String) request.getParam("text");
 
-            Comment comment = new Comment(id, authorId, postId, text);
+        Comment comment = new Comment(id, authorId, postId, text);
+        data.addComment(comment);
 
-            data.addComment(comment);
-
-            return Constants.SUCCESS;
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        return Constants.FAILURE;
+        return Constants.SUCCESS;
     }
+
+
+    /* ----------- */
+    /* Main Method */
+    /* ----------- */
 
     public static void main(String[] args) {
         Data.getInstance();

@@ -4,32 +4,34 @@ public class Constants {
     public static final int PORT = 8000;
 
     // Paths
-    public static final String AUTH = "/authenticate";
     public static final String GET_POST = "/getPost";
     public static final String GET_POSTS = "/getPosts";
+    public static final String CREATE_POST = "/createPost";
+    public static final String READ_POST = "/readPost";
     public static final String RATE_POST = "/ratePost";
     public static final String GET_POST_POINTS = "/getPostPoints";
+    public static final String AUTH = "/authenticate";
     public static final String GET_USER = "/getUser";
-    public static final String GET_USER_POINTS = "/getUserPoints";
-    public static final String SPEND_POINTS = "/spendPoints";
-    public static final String GET_DISCOUNTS = "/getDiscounts";
     public static final String CREATE_USER = "/createUser";
     public static final String UPDATE_USER = "/updateUser";
-    public static final String UPDATE_USER_ATTRIBUTE = "/updateUser";
+    public static final String GET_USER_POINTS = "/getUserPoints";
+    public static final String SPEND_POINTS = "/spendPoints";
     public static final String GET_COMMENT = "/getComment";
     public static final String POST_COMMENT = "/postComment";
+    public static final String GET_DISCOUNT = "/getDiscount";
+    public static final String GET_DISCOUNTS = "/getDiscounts";
 
     // Params
     public static final String ID_PARAM = "id";
     public static final String USER_ID_PARAM = "userID";
+    public static final String POST_ID_PARAM = "postID";
     public static final String PAGING_HASH = "hash";
     public static final String BIO_PARAM = "bio";
+    public static final String URL_PARAM = "url";
     public static final String PFP_URL_PARAM = "profilePictureURL";
     public static final String USERNAME_PARAM = "username";
     public static final String POSTS_PARAM = "posts";
     public static final String NAME_PARAM =  "name";
-    public static final String ATTRIBUTE_PARAM = "attribute";
-    public static final String NEW_PARAM = "new";
     public static final String POINTS_PARAM = "points";
 
     // Status
