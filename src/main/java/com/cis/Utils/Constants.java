@@ -13,9 +13,16 @@ public class Constants {
     public static final String GET_USER_POINTS = "/getUserPoints";
     public static final String SPEND_POINTS = "/spendPoints";
     public static final String GET_DISCOUNTS = "/getDiscounts";
+    public static final String CREATE_USER = "/createUser";
+    public static final String UPDATE_USER = "/updateUser";
 
     // Params
     public static final String ID_PARAM = "id";
+    public static final String BIO_PARAM = "bio";
+    public static final String PFP_URL_PARAM = "profilePictureURL";
+    public static final String USERNAME_PARAM = "username";
+    public static final String POSTS_PARAM = "posts";
+    public static final String NAME_PARAM =  "name";
 
 
     // Status

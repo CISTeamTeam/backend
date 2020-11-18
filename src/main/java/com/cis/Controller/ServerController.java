@@ -9,6 +9,8 @@ import com.cis.Utils.HTTPServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
+
 public class ServerController implements HTTPServerListener {
 
     private static ServerController instance = null;
@@ -32,6 +34,7 @@ public class ServerController implements HTTPServerListener {
             case Constants.AUTH: return authenticate(request);
             case Constants.GET_USER: return getUser(request);
             case Constants.GET_USER_POINTS: return getUserPoints(request);
+            case Constants.CREATE_USER: return createUser(request);
         }
         return null;
     }
@@ -55,6 +58,24 @@ public class ServerController implements HTTPServerListener {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private String createUser(Request request){
+        try {
+            String id = (String) request.getParam(Constants.ID_PARAM);
+            String bio = (String) request.getParam(Constants.BIO_PARAM);
+            String profilePictureURL = (String) request.getParam(Constants.PFP_URL_PARAM);
+            String username = (String) request.getParam(Constants.USERNAME_PARAM);
+            String name = (String) request.getParam(Constants.NAME_PARAM);
+
+            User user = new User(id, bio, profilePictureURL, username, name, 0);
+
+            data.addUser(user);
+            return Constants.SUCCESS;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return Constants.FAILURE;
     }
 
     private String getUserPoints(Request request) {
