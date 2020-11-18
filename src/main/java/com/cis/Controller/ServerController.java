@@ -156,6 +156,24 @@ public class ServerController implements HTTPServerListener {
         return Constants.FAILURE;
     }
 
+    private String postComment(Request request){
+        try {
+            String id = (String) request.getParam(Constants.ID_PARAM);
+            String authorId = (String) request.getParam("authorID");
+            String postId = (String) request.getParam("postID");
+            String text = (String) request.getParam("text");
+
+            Comment comment = new Comment(id, authorId, postId, text);
+
+            data.addComment(comment);
+
+            return Constants.SUCCESS;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return Constants.FAILURE;
+    }
+
     public static void main(String[] args) {
         Data.getInstance();
         HTTPServer server = new HTTPServer(ServerController.server(), Constants.PORT);
