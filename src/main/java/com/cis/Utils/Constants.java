@@ -26,6 +26,7 @@ public class Constants {
     public static final String NAME_PARAM =  "name";
     public static final String ATTRIBUTE_PARAM = "attribute";
     public static final String NEW_PARAM = "new";
+    public static final String POINTS_PARAM = "points";
 
 
     // Status

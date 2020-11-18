@@ -36,6 +36,7 @@ public class ServerController implements HTTPServerListener {
             case Constants.GET_USER_POINTS: return getUserPoints(request);
             case Constants.CREATE_USER: return createUser(request);
             case Constants.UPDATE_USER_ATTRIBUTE: return updateUserAttribute(request);
+            case Constants.SPEND_POINTS: return spendPoints(request);
         }
         return null;
     }
@@ -118,6 +119,19 @@ public class ServerController implements HTTPServerListener {
         String id = (String) request.getParam(Constants.ID_PARAM);
         int points = data.getUsers().get(id).getPoints();
         return "{ \"userID\": " + id + ", \"points\": " + points + " }";
+    }
+
+    private String spendPoints(Request request) {
+        try {
+            String id = (String) request.getParam(Constants.ID_PARAM);
+            int pointsSpent = (int) request.getParam(Constants.POINTS_PARAM);
+            User user = data.getUsers().get(id);
+            user.subtractPoints(pointsSpent);
+            return Constants.SUCCESS;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return Constants.FAILURE;
     }
 
 
