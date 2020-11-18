@@ -31,14 +31,14 @@ public class ServerThread extends Thread{
             //code to read the headers
             StringBuilder headerBuilder = new StringBuilder();
             String line;
-            while((line = reader.readLine()).length() != 0){
+            while ((line = reader.readLine()).length() != 0) {
                 headerBuilder.append(line);
             }
             String header = headerBuilder.toString();
 
             //code to read the post payload data
             StringBuilder payloadBuilder = new StringBuilder();
-            while(reader.ready()){
+            while (reader.ready()) {
                 payloadBuilder.append((char) reader.read());
             }
             String payload = payloadBuilder.toString();
@@ -47,9 +47,10 @@ public class ServerThread extends Thread{
 
             try {
                 Request request = new Request(header, payload);
-                writer.println("HTTP/1.1 200 OK\r\n\r\n" + listener.handleRequest(request));
+                writer.println("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n" +
+                                       listener.handleRequest(request));
             }
-            catch (JsonProcessingException e){
+            catch (JsonProcessingException e) {
                 writer.println(sendError(Constants.JSONError));
             }
 
