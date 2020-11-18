@@ -57,7 +57,7 @@ public class Post {
         return comments;
     }
 
-    public void addComments(String comment) {
+    public void addComment(String comment) {
         this.comments.add(comment);
     }
 
