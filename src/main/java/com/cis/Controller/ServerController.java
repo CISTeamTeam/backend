@@ -30,6 +30,7 @@ public class ServerController implements HTTPServerListener {
     public String handleRequest(Request request) {
         switch(request.getPath()){
             case Constants.GET_USER: return getUser(request);
+            case Constants.AUTH: return authenticate(request);
         }
         return null;
     }
@@ -44,6 +45,15 @@ public class ServerController implements HTTPServerListener {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private String authenticate(Request request){
+        String id = (String) request.getParam(Constants.ID_PARAM);
+
+        if(data.getUsers().containsKey(id)){
+            return Constants.SUCCESS;
+        }
+        return Constants.FAILURE;
     }
 
     private String getUserPoints(Request request) {

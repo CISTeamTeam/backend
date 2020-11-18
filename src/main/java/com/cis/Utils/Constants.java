@@ -19,8 +19,8 @@ public class Constants {
 
 
     // Status
-    public static final String SUCCESS = "success";
-    public static final String FAILURE = "failure";
+    public static final String SUCCESS = "{\"status\":\"success\"}";
+    public static final String FAILURE = "{\"status\":\"failure\"}";
 
     // Error Messages
     public static final String JSONError = "JSON Error";
