@@ -2,10 +2,7 @@ package com.cis.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Post {
 
@@ -14,12 +11,12 @@ public class Post {
     private String url;
     private String description;
     private double creationDate;
-    private ArrayList<String> comments;
+    private List<String> comments;
     @JsonIgnore
     private Map<String, Integer> ratings;
 
     public Post() {
-        this.comments = (ArrayList<String>) Collections.synchronizedList(new ArrayList<String>());
+        this.comments = Collections.synchronizedList(new ArrayList<String>());
         this.ratings = Collections.synchronizedMap(new HashMap<>());
     }
 
@@ -29,7 +26,7 @@ public class Post {
         this.url = url;
         this.description = description;
         this.creationDate = creationDate;
-        this.comments = (ArrayList<String>) Collections.synchronizedList(new ArrayList<String>());
+        this.comments = Collections.synchronizedList(new ArrayList<String>());
         this.ratings = Collections.synchronizedMap(new HashMap<>());
     }
 
@@ -53,7 +50,7 @@ public class Post {
         return creationDate;
     }
 
-    public ArrayList<String> getComments() {
+    public List<String> getComments() {
         return comments;
     }
 

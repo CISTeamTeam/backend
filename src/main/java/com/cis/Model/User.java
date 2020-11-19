@@ -25,7 +25,7 @@ public class User {
             Post post1 = Data.getInstance().getPosts().get(postUID1);
             Post post2 = Data.getInstance().getPosts().get(postUID2);
 
-            return post2.getCreationDate() - post1.getCreationDate();
+            return (int) (post2.getCreationDate() - post1.getCreationDate());
         }
     }
 

@@ -85,7 +85,7 @@ public class ServerController implements HTTPServerListener {
 
         if (userID != null) {
             user = data.getUsers().get(userID);
-
+            System.out.println(userID);
         }
         else {
             user = data.getUsers().get(Constants.ANONYMOUS_USER);
@@ -98,6 +98,8 @@ public class ServerController implements HTTPServerListener {
             hash = UUID.randomUUID().toString();
             posts = (TreeSet<String>) ((TreeSet<String>) user.getUnreadPosts()).clone();
         }
+
+        System.out.println("HI I'm here");
 
         for (int i = 0; i < 10; i++) {
             String post;

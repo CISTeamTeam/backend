@@ -27,6 +27,9 @@ public class Data {
         if (instance == null) {
             instance = new Data();
             instance.addUser(new User(Constants.ANONYMOUS_USER, "anon", "anon", "anon", null, 0));
+            instance.addUser(new User("abcde", "", "", "", null, 0));
+            instance.addUser(new User("test", "", "", "", null, 0));
+            instance.addPost(new Post("abcde2", "abcde", "url", "desc", 5.0));
         }
         return instance;
     }
