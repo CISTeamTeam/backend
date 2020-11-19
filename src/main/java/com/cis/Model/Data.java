@@ -91,11 +91,11 @@ public class Data {
         try {
             File dataFile = new File(filename);
             Scanner scanner = new Scanner(dataFile);
-            String dataString = "";
+            StringBuilder dataString = new StringBuilder();
             while(scanner.hasNextLine()){
-                dataString += scanner.nextLine();
+                dataString.append(scanner.nextLine());
             }
-            instance = new ObjectMapper().readValue(dataString, Data.class);
+            instance = new ObjectMapper().readValue(dataString.toString(), Data.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
