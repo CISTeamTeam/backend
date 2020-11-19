@@ -2,25 +2,22 @@ package com.cis.Model;
 
 import com.cis.Utils.Constants;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class Data {
 
     private static Data instance = null;
 
-    private Map<String, User> users;
-    private Map<String, Post> posts;
-    private Map<String, Comment> comments;
-
-    private User anonymousUser;
+    private HashMap<String, User> users;
+    private HashMap<String, Post> posts;
+    private HashMap<String, Comment> comments;
+    private HashMap<String, Discount> discounts;
 
     private Data() {
-        this.users = Collections.synchronizedMap(new HashMap<>());
-        this.posts = Collections.synchronizedMap(new LinkedHashMap<>());
-        this.comments = Collections.synchronizedMap(new HashMap<>());
+        this.users = new HashMap<>();
+        this.posts = new HashMap<>();
+        this.comments = new HashMap<>();
+        this.discounts = new HashMap<>();
     }
 
     public static Data getInstance() {
@@ -34,7 +31,7 @@ public class Data {
         return instance;
     }
 
-    public Map<String, User> getUsers() {
+    public HashMap<String, User> getUsers() {
         return users;
     }
 
@@ -42,7 +39,7 @@ public class Data {
         this.users.put(user.getId(), user);
     }
 
-    public Map<String, Post> getPosts() {
+    public HashMap<String, Post> getPosts() {
         return posts;
     }
 
@@ -50,7 +47,7 @@ public class Data {
         this.posts.put(post.getId(), post);
     }
 
-    public Map<String, Comment> getComments() {
+    public HashMap<String, Comment> getComments() {
         return comments;
     }
 
@@ -58,10 +55,19 @@ public class Data {
         this.comments.put(comment.getId(), comment);
     }
 
+    public HashMap<String, Discount> getDiscounts() {
+        return discounts;
+    }
+
+    public void addDiscount(Discount discount) {
+        this.discounts.put(discount.getId(), discount);
+    }
+
     public void clearData() {
-        this.users = Collections.synchronizedMap(new HashMap<>());
-        this.posts = Collections.synchronizedMap(new HashMap<>());
-        this.comments = Collections.synchronizedMap(new HashMap<>());
+        this.users = new HashMap<>();
+        this.posts = new HashMap<>();
+        this.comments = new HashMap<>();
+        this.discounts = new HashMap<>();
         instance.addUser(new User(Constants.ANONYMOUS_USER, "anon", "anon", "anon", null, 0));
     }
 }

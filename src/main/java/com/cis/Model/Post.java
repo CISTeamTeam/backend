@@ -11,13 +11,13 @@ public class Post {
     private String url;
     private String description;
     private double creationDate;
-    private List<String> comments;
+    private ArrayList<String> comments;
     @JsonIgnore
-    private Map<String, Integer> ratings;
+    private HashMap<String, Integer> ratings;
 
     public Post() {
-        this.comments = Collections.synchronizedList(new ArrayList<String>());
-        this.ratings = Collections.synchronizedMap(new HashMap<>());
+        this.comments = new ArrayList<>();
+        this.ratings = new HashMap<>();
     }
 
     public Post(String id, String authorID, String url, String description, double creationDate) {
@@ -26,8 +26,8 @@ public class Post {
         this.url = url;
         this.description = description;
         this.creationDate = creationDate;
-        this.comments = Collections.synchronizedList(new ArrayList<String>());
-        this.ratings = Collections.synchronizedMap(new HashMap<>());
+        this.comments = new ArrayList<>();
+        this.ratings = new HashMap<>();
     }
 
     public String getId() {
@@ -50,7 +50,7 @@ public class Post {
         return creationDate;
     }
 
-    public List<String> getComments() {
+    public ArrayList<String> getComments() {
         return comments;
     }
 

@@ -30,7 +30,7 @@ public class ServerController implements HTTPServerListener {
     @Override
     public String handleRequest(Request request) {
         try {
-            switch(request.getPath()){
+            switch (request.getPath()) {
                 case Constants.CLEAR_DATA: return clearData(request);
                 case Constants.GET_POST: return getPost(request);
                 case Constants.GET_POSTS: return getPosts(request);
@@ -46,6 +46,8 @@ public class ServerController implements HTTPServerListener {
                 case Constants.SPEND_POINTS: return spendPoints(request);
                 case Constants.GET_COMMENT: return getComment(request);
                 case Constants.POST_COMMENT: return postComment(request);
+                case Constants.GET_DISCOUNT: return getDiscount(request);
+                case Constants.GET_DISCOUNTS: return getDiscounts(request);
             }
         }
         catch(Exception e) {
@@ -65,9 +67,6 @@ public class ServerController implements HTTPServerListener {
     /* ------------- */
 
     private String getPost(Request request) {
-
-        System.out.println("test123");
-
         String id = (String) request.getParam(Constants.ID_PARAM);
         Post post = data.getPosts().get(id);
         try {
@@ -88,7 +87,6 @@ public class ServerController implements HTTPServerListener {
 
         if (userID != null) {
             user = data.getUsers().get(userID);
-            System.out.println(userID);
         }
         else {
             user = data.getUsers().get(Constants.ANONYMOUS_USER);
@@ -99,10 +97,8 @@ public class ServerController implements HTTPServerListener {
         }
         else {
             hash = UUID.randomUUID().toString();
-            posts = (TreeSet<String>) ((TreeSet<String>) user.getUnreadPosts()).clone();
+            posts = (TreeSet<String>) (user.getUnreadPosts()).clone();
         }
-
-        System.out.println("HI I'm here");
 
         for (int i = 0; i < 10; i++) {
             String post;
@@ -284,6 +280,40 @@ public class ServerController implements HTTPServerListener {
         data.addComment(comment);
 
         return Constants.SUCCESS;
+    }
+
+
+    /* ----------------- */
+    /* Discount Requests */
+    /* ----------------- */
+
+    private String getDiscount(Request request) {
+        String id = (String) request.getParam(Constants.ID_PARAM);
+
+        Discount discount = data.getDiscounts().get(id);
+        try {
+            return new ObjectMapper().writeValueAsString(discount);
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return Constants.FAILURE;
+        }
+    }
+
+    private String getDiscounts(Request request) {
+        ArrayList<String> discounts = new ArrayList<>();
+
+        for (String discountID : data.getDiscounts().keySet()) {
+            discounts.add(discountID);
+        }
+
+        try {
+            return new ObjectMapper().writeValueAsString(discounts);
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return Constants.FAILURE;
+        }
     }
 
 
