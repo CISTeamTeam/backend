@@ -2,7 +2,10 @@ package com.cis.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class User {
 
@@ -11,11 +14,11 @@ public class User {
     private String name;
     private String bio;
     private String profilePictureURL;
-    private SortedSet<String> posts;
+    private TreeSet<String> posts;
     @JsonIgnore
-    private SortedSet<String> unreadPosts;
+    private TreeSet<String> unreadPosts;
     @JsonIgnore
-    private Map<String, Set<String>> trackPaging;
+    private HashMap<String, Set<String>> trackPaging;
     @JsonIgnore
     private int points;
 
@@ -30,9 +33,9 @@ public class User {
     }
 
     public User() {
-        this.posts = Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
-        this.unreadPosts = Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
-        this.trackPaging = Collections.synchronizedMap(new HashMap<>());
+        this.posts = new TreeSet<>(new SortPostByTime());
+        this.unreadPosts = new TreeSet<>(new SortPostByTime());
+        this.trackPaging = new HashMap<>();
         this.points = 0;
     }
 
@@ -42,9 +45,9 @@ public class User {
         this.name = name;
         this.bio = bio;
         this.profilePictureURL = profilePictureURL;
-        this.posts = Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
-        this.unreadPosts = Collections.synchronizedSortedSet(new TreeSet<>(new SortPostByTime()));
-        this.trackPaging = Collections.synchronizedMap(new HashMap<>());
+        this.posts = new TreeSet<>(new SortPostByTime());
+        this.unreadPosts = new TreeSet<>(new SortPostByTime());
+        this.trackPaging = new HashMap<>();
         this.points = points;
     }
 
@@ -84,7 +87,7 @@ public class User {
         this.profilePictureURL = profilePictureURL;
     }
 
-    public SortedSet<String> getPosts() {
+    public TreeSet<String> getPosts() {
         return posts;
     }
 
@@ -92,7 +95,7 @@ public class User {
         this.posts.add(post);
     }
 
-    public SortedSet<String> getUnreadPosts() {
+    public TreeSet<String> getUnreadPosts() {
         return unreadPosts;
     }
 
@@ -104,7 +107,7 @@ public class User {
         this.unreadPosts.remove(post);
     }
 
-    public Map<String, Set<String>> getTrackPaging() {
+    public HashMap<String, Set<String>> getTrackPaging() {
         return trackPaging;
     }
 
