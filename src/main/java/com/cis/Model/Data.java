@@ -36,6 +36,31 @@ public class Data {
         return instance;
     }
 
+    public static void storeData() {
+        try {
+            String dataString = new ObjectMapper().writeValueAsString(getInstance());
+            FileWriter outputFile = new FileWriter(Constants.SAVE_FILE);
+            outputFile.write(dataString);
+            outputFile.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void restoreData(){
+        try {
+            File dataFile = new File(Constants.SAVE_FILE);
+            Scanner scanner = new Scanner(dataFile);
+            StringBuilder dataString = new StringBuilder();
+            while(scanner.hasNextLine()){
+                dataString.append(scanner.nextLine());
+            }
+            instance = new ObjectMapper().readValue(dataString.toString(), Data.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public HashMap<String, User> getUsers() {
         return users;
     }
@@ -74,30 +99,5 @@ public class Data {
         this.comments = new HashMap<>();
         this.discounts = new HashMap<>();
         instance.addUser(new User(Constants.ANONYMOUS_USER, "anon", "anon", "anon", null, 0));
-    }
-
-    public static void storeData(String filename) {
-        try {
-            String dataString = new ObjectMapper().writeValueAsString(getInstance());
-            FileWriter outputFile = new FileWriter(filename);
-            outputFile.write(dataString);
-            outputFile.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void restoreData(String filename){
-        try {
-            File dataFile = new File(filename);
-            Scanner scanner = new Scanner(dataFile);
-            StringBuilder dataString = new StringBuilder();
-            while(scanner.hasNextLine()){
-                dataString.append(scanner.nextLine());
-            }
-            instance = new ObjectMapper().readValue(dataString.toString(), Data.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

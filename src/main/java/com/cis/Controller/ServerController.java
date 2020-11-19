@@ -5,16 +5,20 @@ import com.cis.Utils.Constants;
 import com.cis.Utils.HTTPServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.security.ntlm.Server;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.concurrent.*;
 
 public class ServerController implements HTTPServerListener {
 
     private static ServerController instance = null;
 
     private Data data;
+
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     private ServerController() {
         data = Data.getInstance();
@@ -301,14 +305,10 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String getDiscounts(Request request) {
-        ArrayList<String> discounts = new ArrayList<>();
-
-        for (String discountID : data.getDiscounts().keySet()) {
-            discounts.add(discountID);
-        }
+        ArrayList<String> discounts = new ArrayList<>(data.getDiscounts().keySet());
 
         try {
-            return new ObjectMapper().writeValueAsString(discounts);
+            return "{ \"discounts\": " + new ObjectMapper().writeValueAsString(discounts) + " }";
         }
         catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -323,7 +323,14 @@ public class ServerController implements HTTPServerListener {
 
     public static void main(String[] args) {
         Data.getInstance();
+        Data.restoreData();
+        ServerController.server().saveServer();
         HTTPServer server = new HTTPServer(ServerController.server(), Constants.PORT);
         server.start();
+    }
+
+    public void saveServer() {
+        final Runnable save = Data::storeData;
+        scheduler.scheduleAtFixedRate(save, 10, 10, TimeUnit.MINUTES);
     }
 }

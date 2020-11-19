@@ -51,6 +51,7 @@ public class ServerThread extends Thread{
                                        listener.handleRequest(request));
             }
             catch (JsonProcessingException e) {
+                e.printStackTrace();
                 writer.println(sendError(Constants.JSONError));
             }
 
