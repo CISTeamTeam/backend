@@ -65,6 +65,9 @@ public class ServerController implements HTTPServerListener {
     /* ------------- */
 
     private String getPost(Request request) {
+
+        System.out.println("test123");
+
         String id = (String) request.getParam(Constants.ID_PARAM);
         Post post = data.getPosts().get(id);
         try {
