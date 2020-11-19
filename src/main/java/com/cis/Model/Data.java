@@ -1,8 +1,13 @@
 package com.cis.Model;
 
 import com.cis.Utils.Constants;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Data {
 
@@ -69,5 +74,30 @@ public class Data {
         this.comments = new HashMap<>();
         this.discounts = new HashMap<>();
         instance.addUser(new User(Constants.ANONYMOUS_USER, "anon", "anon", "anon", null, 0));
+    }
+
+    public static void storeData(String filename) {
+        try {
+            String dataString = new ObjectMapper().writeValueAsString(getInstance());
+            FileWriter outputFile = new FileWriter(filename);
+            outputFile.write(dataString);
+            outputFile.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void restoreData(String filename){
+        try {
+            File dataFile = new File(filename);
+            Scanner scanner = new Scanner(dataFile);
+            String dataString = "";
+            while(scanner.hasNextLine()){
+                dataString += scanner.nextLine();
+            }
+            instance = new ObjectMapper().readValue(dataString, Data.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
