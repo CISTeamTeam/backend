@@ -338,7 +338,7 @@ public class ServerController implements HTTPServerListener {
         if(post.getRatings().containsKey(userId)){
             return Constants.FAILURE;
         }
-        if(post.getCreationDate()>(int)(Instant.now().toEpochMilli()/1000)-86400){
+        if(post.getCreationDate()*1000>Instant.now().toEpochMilli()-86400){
             return Constants.SUCCESS;
         }
         return Constants.FAILURE;
