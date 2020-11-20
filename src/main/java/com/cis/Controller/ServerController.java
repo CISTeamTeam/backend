@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.TreeSet;
 import java.util.UUID;
 import java.util.concurrent.*;
@@ -18,6 +19,16 @@ public class ServerController implements HTTPServerListener {
     private Data data;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+    class SortPostByTime implements Comparator<String> {
+        @Override
+        public int compare(String postUID1, String postUID2) {
+            Post post1 = Data.getInstance().getPosts().get(postUID1);
+            Post post2 = Data.getInstance().getPosts().get(postUID2);
+
+            return (int) (post2.getCreationDate() - post1.getCreationDate());
+        }
+    }
 
     private ServerController() {
         data = Data.getInstance();
@@ -83,25 +94,18 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String getPosts(Request request) {
-        String userID = (String) request.getParam(Constants.USER_ID_PARAM);
         String hash = (String) request.getParam(Constants.PAGING_HASH);
         ArrayList<String> topPosts = new ArrayList<>();
         TreeSet<String> posts;
-        User user;
-
-        if (userID != null) {
-            user = data.getUsers().get(userID);
-        }
-        else {
-            user = data.getUsers().get(Constants.ANONYMOUS_USER);
-        }
 
         if (hash != null) {
-            posts = (TreeSet<String>) user.getTrackPaging().get(hash);
+            posts = data.getTrackPaging().get(hash);
         }
         else {
             hash = UUID.randomUUID().toString();
-            posts = (TreeSet<String>) (user.getUnreadPosts()).clone();
+            posts = new TreeSet<>(new SortPostByTime());
+            posts.addAll(data.getPosts().keySet());
+            data.putPageTracking(hash, posts);
         }
 
         for (int i = 0; i < 10; i++) {
@@ -111,12 +115,11 @@ public class ServerController implements HTTPServerListener {
             }
             topPosts.add(post);
         }
-        if (posts.size() > 0) {
-            user.putPagingRequest(hash, posts);
+
+        if (posts.isEmpty()) {
+            data.removePageTracking(hash);
         }
-        else {
-            user.removePagingRequest(hash);
-        }
+
         String postsJson = "";
         try {
             postsJson = new ObjectMapper().writeValueAsString(topPosts);
@@ -124,7 +127,7 @@ public class ServerController implements HTTPServerListener {
         catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return "{ \"hash\": \"" + userID + "\", " +
+        return "{ \"hash\": \"" + hash + "\", " +
                  "\"posts\": " + postsJson + " }";
     }
 
@@ -141,11 +144,6 @@ public class ServerController implements HTTPServerListener {
             return Constants.FAILURE;
         }
         data.addPost(post);
-        data.getUsers().get(userID).addPost(post.getId());
-        for (String otherUserID : data.getUsers().keySet()) {
-            User otherUser = data.getUsers().get(otherUserID);
-            otherUser.addUnreadPost(post.getId());
-        }
         return Constants.SUCCESS;
     }
 

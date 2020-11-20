@@ -6,32 +6,34 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 public class Data {
 
     private static Data instance = null;
 
     private HashMap<String, User> users;
-    private LinkedHashMap<String, Post> posts;
+    private HashMap<String, Post> posts;
     private HashMap<String, Comment> comments;
     private HashMap<String, Discount> discounts;
     private HashMap<String, Challenge> challenges;
+    private HashMap<String, TreeSet<String>> trackPaging;
 
     private Data() {
         this.users = new HashMap<>();
-        this.posts = new LinkedHashMap<>();
+        this.posts = new HashMap<>();
         this.comments = new HashMap<>();
         this.discounts = new HashMap<>();
         this.challenges = new HashMap<>();
+        this.trackPaging = new HashMap<>();
     }
 
     public static Data getInstance() {
         if (instance == null) {
             instance = new Data();
-            instance.addUser(new User(Constants.ANONYMOUS_USER, "anon", "anon", "anon", null, 0));
             instance.addUser(new User("abcde", "", "", "", null, 0));
             instance.addUser(new User("test", "", "", "", null, 0));
             instance.addPost(new Post("abcde2", "abcde", "url", "desc", 5.0));
@@ -110,12 +112,24 @@ public class Data {
         this.challenges.put(challenge.getId(), challenge);
     }
 
+    public HashMap<String, TreeSet<String>> getTrackPaging() {
+        return trackPaging;
+    }
+
+    public void putPageTracking(String hash, TreeSet<String> posts) {
+        this.trackPaging.put(hash, posts);
+    }
+
+    public void removePageTracking(String hash) {
+        this.trackPaging.remove(hash);
+    }
+
     public void clearData() {
         this.users = new HashMap<>();
-        this.posts = new LinkedHashMap<>();
+        this.posts = new HashMap<>();
         this.comments = new HashMap<>();
         this.discounts = new HashMap<>();
         this.challenges = new HashMap<>();
-        instance.addUser(new User(Constants.ANONYMOUS_USER, "anon", "anon", "anon", null, 0));
+        this.trackPaging = new HashMap<>();
     }
 }
