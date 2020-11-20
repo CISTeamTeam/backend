@@ -16,6 +16,10 @@ public class Post {
     @JsonIgnore
     private HashMap<String, Integer> ratings;
 
+    public HashMap<String, Integer> getRatings() {
+        return ratings;
+    }
+
     public Post() {
         this.comments = new ArrayList<>();
         this.ratings = new HashMap<>();
