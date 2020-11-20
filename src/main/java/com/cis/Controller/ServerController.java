@@ -6,6 +6,7 @@ import com.cis.Utils.HTTPServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.TreeSet;
@@ -63,6 +64,7 @@ public class ServerController implements HTTPServerListener {
                 case Constants.GET_DISCOUNTS: return getDiscounts(request);
                 case Constants.GET_CHALLENGE: return getChallenge(request);
                 case Constants.GET_CHALLENGES: return getChallenges(request);
+                case Constants.CAN_RATE_POST: return canRatePost(request);
             }
         }
         catch(Exception e) {
@@ -325,6 +327,19 @@ public class ServerController implements HTTPServerListener {
             return Constants.FAILURE;
         }
 
+    }
+
+    private String canRatePost(Request request){
+        String postId = (String) request.getParam(Constants.ID_PARAM);
+        String userId = (String) request.getParam(Constants.USER_ID_PARAM);
+        Post post = data.getPosts().get(postId);
+        if(post.getRatings().containsKey(userId)){
+            return Constants.FAILURE;
+        }
+        if(post.getCreationDate()>(int)(Instant.now().toEpochMilli()/1000)-86400){
+            return Constants.SUCCESS;
+        }
+        return Constants.FAILURE;
     }
 
 

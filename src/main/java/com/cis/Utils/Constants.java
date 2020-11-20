@@ -23,6 +23,7 @@ public class Constants {
     public static final String GET_DISCOUNTS = "/getDiscounts";
     public static final String GET_CHALLENGE = "/getChallenge";
     public static final String GET_CHALLENGES = "/getChallenges";
+    public static final String CAN_RATE_POST = "/canRatePost";
 
     // Params
     public static final String ID_PARAM = "id";

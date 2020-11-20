@@ -14,6 +14,10 @@ public class Post {
     private ArrayList<String> comments;
     private HashMap<String, Integer> ratings;
 
+    public int getRating() {
+        return rating;
+    }
+
     private int rating;
 
     public Post() {
@@ -58,6 +62,7 @@ public class Post {
     public void addComment(String comment) {
         this.comments.add(comment);
     }
+
 
     public HashMap<String, Integer> getRatings() { return ratings; }
 
