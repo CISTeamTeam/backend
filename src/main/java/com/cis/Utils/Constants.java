@@ -2,7 +2,6 @@ package com.cis.Utils;
 
 public class Constants {
     public static final int PORT = 8000;
-    public static final String ANONYMOUS_USER = "anonymousUser";
     public static final String SAVE_FILE = "save.txt";
 
     // Paths

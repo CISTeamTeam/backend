@@ -66,6 +66,10 @@ public class Post {
 
     public HashMap<String, Integer> getRatings() { return ratings; }
 
+    public int getRating {
+
+    }
+
     public void addRating(String user, int rating) {
         this.ratings.put(user, rating);
     }
