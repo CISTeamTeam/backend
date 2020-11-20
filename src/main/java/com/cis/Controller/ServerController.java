@@ -327,6 +327,11 @@ public class ServerController implements HTTPServerListener {
         }
     }
 
+
+    /* ------------------ */
+    /* Challenge Requests */
+    /* ------------------ */
+
     private String getChallenge(Request request) {
         String id = (String) request.getParam(Constants.ID_PARAM);
         Challenge challenge = data.getChallenges().get(id);
