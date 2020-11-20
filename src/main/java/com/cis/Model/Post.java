@@ -12,9 +12,9 @@ public class Post {
     private String description;
     private double creationDate;
     private ArrayList<String> comments;
-    private int rating;
-    @JsonIgnore
     private HashMap<String, Integer> ratings;
+
+    private int rating;
 
     public Post() {
         this.comments = new ArrayList<>();
@@ -59,10 +59,7 @@ public class Post {
         this.comments.add(comment);
     }
 
-    public int getRating() {
-        //TODO add rating algorithm
-        return 0;
-    }
+    public HashMap<String, Integer> getRatings() { return ratings; }
 
     public void addRating(String user, int rating) {
         this.ratings.put(user, rating);

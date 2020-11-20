@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 public class Data {
@@ -14,14 +15,14 @@ public class Data {
     private static Data instance = null;
 
     private HashMap<String, User> users;
-    private HashMap<String, Post> posts;
+    private LinkedHashMap<String, Post> posts;
     private HashMap<String, Comment> comments;
     private HashMap<String, Discount> discounts;
     private HashMap<String, Challenge> challenges;
 
     private Data() {
         this.users = new HashMap<>();
-        this.posts = new HashMap<>();
+        this.posts = new LinkedHashMap<>();
         this.comments = new HashMap<>();
         this.discounts = new HashMap<>();
         this.challenges = new HashMap<>();
@@ -111,7 +112,7 @@ public class Data {
 
     public void clearData() {
         this.users = new HashMap<>();
-        this.posts = new HashMap<>();
+        this.posts = new LinkedHashMap<>();
         this.comments = new HashMap<>();
         this.discounts = new HashMap<>();
         this.challenges = new HashMap<>();

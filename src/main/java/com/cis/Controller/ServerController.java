@@ -38,7 +38,6 @@ public class ServerController implements HTTPServerListener {
                 case Constants.GET_POST: return getPost(request);
                 case Constants.GET_POSTS: return getPosts(request);
                 case Constants.CREATE_POST: return createPost(request);
-                case Constants.READ_POST: return readPost(request);
                 case Constants.RATE_POST: return ratePost(request);
                 case Constants.GET_POST_POINTS: return getPostPoints(request);
                 case Constants.AUTH: return authenticate(request);
@@ -145,16 +144,6 @@ public class ServerController implements HTTPServerListener {
             User otherUser = data.getUsers().get(otherUserID);
             otherUser.addUnreadPost(post.getId());
         }
-        return Constants.SUCCESS;
-    }
-
-    private String readPost(Request request) {
-        String id = (String) request.getParam(Constants.ID_PARAM);
-        String userID = (String) request.getParam(Constants.USER_ID_PARAM);
-
-        User user = data.getUsers().get(userID);
-        user.removeUnreadPost(id);
-
         return Constants.SUCCESS;
     }
 

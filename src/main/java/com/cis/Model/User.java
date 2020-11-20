@@ -1,10 +1,6 @@
 package com.cis.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Set;
 import java.util.TreeSet;
 
 public class User {
@@ -15,11 +11,6 @@ public class User {
     private String bio;
     private String profilePictureURL;
     private TreeSet<String> posts;
-    @JsonIgnore
-    private TreeSet<String> unreadPosts;
-    @JsonIgnore
-    private HashMap<String, Set<String>> trackPaging;
-    @JsonIgnore
     private int points;
 
     class SortPostByTime implements Comparator<String> {
@@ -34,8 +25,6 @@ public class User {
 
     public User() {
         this.posts = new TreeSet<>(new SortPostByTime());
-        this.unreadPosts = new TreeSet<>(new SortPostByTime());
-        this.trackPaging = new HashMap<>();
         this.points = 0;
     }
 
@@ -46,8 +35,6 @@ public class User {
         this.bio = bio;
         this.profilePictureURL = profilePictureURL;
         this.posts = new TreeSet<>(new SortPostByTime());
-        this.unreadPosts = new TreeSet<>(new SortPostByTime());
-        this.trackPaging = new HashMap<>();
         this.points = points;
     }
 
@@ -93,30 +80,6 @@ public class User {
 
     public void addPost(String post) {
         this.posts.add(post);
-    }
-
-    public TreeSet<String> getUnreadPosts() {
-        return unreadPosts;
-    }
-
-    public void addUnreadPost(String post) {
-        this.unreadPosts.add(post);
-    }
-
-    public void removeUnreadPost(String post) {
-        this.unreadPosts.remove(post);
-    }
-
-    public HashMap<String, Set<String>> getTrackPaging() {
-        return trackPaging;
-    }
-
-    public void putPagingRequest(String pagingHash, Set<String> posts) {
-        this.trackPaging.put(pagingHash, posts);
-    }
-
-    public void removePagingRequest(String pagingHash) {
-        this.trackPaging.remove(pagingHash);
     }
 
     public int getPoints() {
