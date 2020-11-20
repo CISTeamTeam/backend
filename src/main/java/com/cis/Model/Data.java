@@ -1,10 +1,10 @@
 package com.cis.Model;
 
 import com.cis.Utils.Constants;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -38,8 +38,9 @@ public class Data {
 
     public static void storeData() {
         try {
-            String dataString = new ObjectMapper().writeValueAsString(getInstance());
+            String dataString = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(getInstance());
             FileWriter outputFile = new FileWriter(Constants.SAVE_FILE);
+            System.out.println("Created File");
             outputFile.write(dataString);
             outputFile.close();
         } catch (Exception e) {
@@ -56,7 +57,12 @@ public class Data {
                 dataString.append(scanner.nextLine());
             }
             instance = new ObjectMapper().readValue(dataString.toString(), Data.class);
-        } catch (Exception e) {
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+            storeData();
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

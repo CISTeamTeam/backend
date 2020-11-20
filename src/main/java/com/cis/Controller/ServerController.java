@@ -5,7 +5,6 @@ import com.cis.Utils.Constants;
 import com.cis.Utils.HTTPServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.security.ntlm.Server;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -24,7 +23,7 @@ public class ServerController implements HTTPServerListener {
         data = Data.getInstance();
     }
 
-    public static ServerController server() {
+    public static ServerController getInstance() {
         if (instance == null) {
             instance = new ServerController();
         }
@@ -324,13 +323,13 @@ public class ServerController implements HTTPServerListener {
     public static void main(String[] args) {
         Data.getInstance();
         Data.restoreData();
-        ServerController.server().saveServer();
-        HTTPServer server = new HTTPServer(ServerController.server(), Constants.PORT);
+        ServerController.getInstance().saveServer();
+        HTTPServer server = new HTTPServer(ServerController.getInstance(), Constants.PORT);
         server.start();
     }
 
     public void saveServer() {
         final Runnable save = Data::storeData;
-        scheduler.scheduleAtFixedRate(save, 10, 10, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(save, 10, 10, TimeUnit.SECONDS);
     }
 }

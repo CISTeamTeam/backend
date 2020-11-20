@@ -12,6 +12,7 @@ public class Post {
     private String description;
     private double creationDate;
     private ArrayList<String> comments;
+    private int rating;
     @JsonIgnore
     private HashMap<String, Integer> ratings;
 
