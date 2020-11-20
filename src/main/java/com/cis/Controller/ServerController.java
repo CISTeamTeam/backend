@@ -255,7 +255,7 @@ public class ServerController implements HTTPServerListener {
         String id = (String) request.getParam(Constants.ID_PARAM);
 
         int points = data.getUsers().get(id).getPoints();
-        return "{ \"userID\": " + id + ", \"points\": " + points + " }";
+        return "{ \"id\": " + "\"" + id + "\"" + ", \"points\": " + points + " }";
     }
 
     private String spendPoints(Request request) {
