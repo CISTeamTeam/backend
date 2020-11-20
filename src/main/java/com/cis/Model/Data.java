@@ -41,7 +41,6 @@ public class Data {
         try {
             String dataString = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(getInstance());
             FileWriter outputFile = new FileWriter(Constants.SAVE_FILE);
-            System.out.println("Created File");
             outputFile.write(dataString);
             outputFile.close();
         } catch (Exception e) {

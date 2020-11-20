@@ -371,7 +371,6 @@ public class ServerController implements HTTPServerListener {
 
     public void saveServer() {
         final Runnable save = Data::storeData;
-        //TODO: Change back to minutes after testing
-        scheduler.scheduleAtFixedRate(save, 10, 10, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(save, 10, 10, TimeUnit.MINUTES);
     }
 }
