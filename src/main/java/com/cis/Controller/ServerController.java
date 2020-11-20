@@ -263,6 +263,9 @@ public class ServerController implements HTTPServerListener {
         int pointsSpent = (Integer) request.getParam(Constants.POINTS_PARAM);
 
         User user = data.getUsers().get(id);
+        if(user.getPoints()<pointsSpent){
+            return Constants.FAILURE;
+        }
         user.subtractPoints(pointsSpent);
         return Constants.SUCCESS;
     }
