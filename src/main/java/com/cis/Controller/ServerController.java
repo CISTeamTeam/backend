@@ -199,7 +199,7 @@ public class ServerController implements HTTPServerListener {
     private String authenticate(Request request){
         String id = (String) request.getParam(Constants.ID_PARAM);
 
-        if(data.getUsers().containsKey(id)){
+        if (data.getUsers().containsKey(id)){
             return Constants.SUCCESS;
         }
         return Constants.FAILURE;
