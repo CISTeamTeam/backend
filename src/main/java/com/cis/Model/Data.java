@@ -17,12 +17,14 @@ public class Data {
     private HashMap<String, Post> posts;
     private HashMap<String, Comment> comments;
     private HashMap<String, Discount> discounts;
+    private HashMap<String, Challenge> challenges;
 
     private Data() {
         this.users = new HashMap<>();
         this.posts = new HashMap<>();
         this.comments = new HashMap<>();
         this.discounts = new HashMap<>();
+        this.challenges = new HashMap<>();
     }
 
     public static Data getInstance() {
@@ -99,11 +101,20 @@ public class Data {
         this.discounts.put(discount.getId(), discount);
     }
 
+    public HashMap<String, Challenge> getChallenges() {
+        return challenges;
+    }
+
+    public void addChallenge(Challenge challenge) {
+        this.challenges.put(challenge.getId(), challenge);
+    }
+
     public void clearData() {
         this.users = new HashMap<>();
         this.posts = new HashMap<>();
         this.comments = new HashMap<>();
         this.discounts = new HashMap<>();
+        this.challenges = new HashMap<>();
         instance.addUser(new User(Constants.ANONYMOUS_USER, "anon", "anon", "anon", null, 0));
     }
 }

@@ -330,6 +330,6 @@ public class ServerController implements HTTPServerListener {
 
     public void saveServer() {
         final Runnable save = Data::storeData;
-        scheduler.scheduleAtFixedRate(save, 10, 10, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(save, 10, 10, TimeUnit.MINUTES);
     }
 }
