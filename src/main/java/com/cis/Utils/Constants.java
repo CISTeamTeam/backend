@@ -10,7 +10,6 @@ public class Constants {
     public static final String GET_POST = "/getPost";
     public static final String GET_POSTS = "/getPosts";
     public static final String CREATE_POST = "/createPost";
-    public static final String READ_POST = "/readPost";
     public static final String RATE_POST = "/ratePost";
     public static final String GET_POST_POINTS = "/getPostPoints";
     public static final String AUTH = "/authenticate";
