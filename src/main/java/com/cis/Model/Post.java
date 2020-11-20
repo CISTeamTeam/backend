@@ -14,12 +14,6 @@ public class Post {
     private ArrayList<String> comments;
     private HashMap<String, Integer> ratings;
 
-    public int getRating() {
-        return rating;
-    }
-
-    private int rating;
-
     public Post() {
         this.comments = new ArrayList<>();
         this.ratings = new HashMap<>();
@@ -63,11 +57,17 @@ public class Post {
         this.comments.add(comment);
     }
 
-
     public HashMap<String, Integer> getRatings() { return ratings; }
 
-    public int getRating {
-
+    @JsonIgnore
+    public int getFinalRating() {
+        int average = 0;
+        int size = getRatings().size();
+        for (String key : getRatings().keySet()) {
+            int rating = getRatings().get(key);
+            average += rating;
+        }
+        return average / size;
     }
 
     public void addRating(String user, int rating) {

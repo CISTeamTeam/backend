@@ -50,6 +50,7 @@ public class ServerController implements HTTPServerListener {
                 case Constants.GET_POST: return getPost(request);
                 case Constants.GET_POSTS: return getPosts(request);
                 case Constants.CREATE_POST: return createPost(request);
+                case Constants.CAN_RATE_POST: return canRatePost(request);
                 case Constants.RATE_POST: return ratePost(request);
                 case Constants.GET_POST_POINTS: return getPostPoints(request);
                 case Constants.AUTH: return authenticate(request);
@@ -64,7 +65,6 @@ public class ServerController implements HTTPServerListener {
                 case Constants.GET_DISCOUNTS: return getDiscounts(request);
                 case Constants.GET_CHALLENGE: return getChallenge(request);
                 case Constants.GET_CHALLENGES: return getChallenges(request);
-                case Constants.CAN_RATE_POST: return canRatePost(request);
             }
         }
         catch(Exception e) {
@@ -146,6 +146,23 @@ public class ServerController implements HTTPServerListener {
             return Constants.FAILURE;
         }
         data.addPost(post);
+
+        scheduler.schedule(() -> data.getUsers().get(userID).addPoints(post.getFinalRating()), 10, TimeUnit.MINUTES);
+
+        return Constants.SUCCESS;
+    }
+
+    private String canRatePost(Request request){
+        String postId = (String) request.getParam(Constants.ID_PARAM);
+        String userId = (String) request.getParam(Constants.USER_ID_PARAM);
+        Post post = data.getPosts().get(postId);
+        if (post.getRatings().containsKey(userId)) {
+            return Constants.FAILURE;
+        }
+        double epochTime = (Instant.now().toEpochMilli() / 1000.0);
+        if (post.getCreationDate() < epochTime - 86400) {
+            return Constants.FAILURE;
+        }
         return Constants.SUCCESS;
     }
 
@@ -157,15 +174,19 @@ public class ServerController implements HTTPServerListener {
         User user = data.getUsers().get(userID);
         Post post = data.getPosts().get(id);
 
-        post.addRating(user.getId(), rating);
+        double epochTime = (Instant.now().toEpochMilli() / 1000.0);
+        if (post.getCreationDate() < epochTime - 86400) {
+            return Constants.FAILURE;
+        }
 
+        post.addRating(user.getId(), rating);
         return Constants.SUCCESS;
     }
 
     private String getPostPoints(Request request) {
         String id = (String) request.getParam(Constants.ID_PARAM);
 
-        int points = data.getPosts().get(id).getRating();
+        int points = data.getPosts().get(id).getFinalRating();
         return "{\"points\":"+points+"}";
     }
 
@@ -327,19 +348,6 @@ public class ServerController implements HTTPServerListener {
             return Constants.FAILURE;
         }
 
-    }
-
-    private String canRatePost(Request request){
-        String postId = (String) request.getParam(Constants.ID_PARAM);
-        String userId = (String) request.getParam(Constants.USER_ID_PARAM);
-        Post post = data.getPosts().get(postId);
-        if(post.getRatings().containsKey(userId)){
-            return Constants.FAILURE;
-        }
-        if(post.getCreationDate()>(int)(Instant.now().toEpochMilli()/1000)-86400){
-            return Constants.SUCCESS;
-        }
-        return Constants.FAILURE;
     }
 
 
