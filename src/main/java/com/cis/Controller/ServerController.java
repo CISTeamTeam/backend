@@ -51,6 +51,8 @@ public class ServerController implements HTTPServerListener {
                 case Constants.POST_COMMENT: return postComment(request);
                 case Constants.GET_DISCOUNT: return getDiscount(request);
                 case Constants.GET_DISCOUNTS: return getDiscounts(request);
+                case Constants.GET_CHALLENGE: return getChallenge(request);
+                case Constants.GET_CHALLENGES: return getChallenges(request);
             }
         }
         catch(Exception e) {
@@ -313,6 +315,29 @@ public class ServerController implements HTTPServerListener {
             e.printStackTrace();
             return Constants.FAILURE;
         }
+    }
+
+    private String getChallenge(Request request) {
+        String id = (String) request.getParam(Constants.ID_PARAM);
+        Challenge challenge = data.getChallenges().get(id);
+        try {
+            return new ObjectMapper().writeValueAsString(challenge);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return Constants.FAILURE;
+    }
+
+    private String getChallenges(Request request){
+        ArrayList<String> challenges = new ArrayList<>(data.getChallenges().keySet());
+        try {
+            return "{ \"challenges\": " + new ObjectMapper().writeValueAsString(challenges) + " }";
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return Constants.FAILURE;
+        }
+
     }
 
 
