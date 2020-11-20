@@ -147,6 +147,7 @@ public class ServerController implements HTTPServerListener {
         }
         data.addPost(post);
 
+        //TODO: Change back to 24 hours after testing
         scheduler.schedule(() -> data.getUsers().get(userID).addPoints(post.getFinalRating()), 10, TimeUnit.MINUTES);
 
         return Constants.SUCCESS;
@@ -370,6 +371,7 @@ public class ServerController implements HTTPServerListener {
 
     public void saveServer() {
         final Runnable save = Data::storeData;
-        scheduler.scheduleAtFixedRate(save, 10, 10, TimeUnit.MINUTES);
+        //TODO: Change back to minutes after testing
+        scheduler.scheduleAtFixedRate(save, 10, 10, TimeUnit.SECONDS);
     }
 }
