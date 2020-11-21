@@ -27,6 +27,8 @@ public class Post {
         this.creationDate = creationDate;
         this.comments = new ArrayList<>();
         this.ratings = new HashMap<>();
+
+        System.out.println("Author ID: "+authorID);
     }
 
     public String getId() {
