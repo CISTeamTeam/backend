@@ -3,11 +3,16 @@ package com.cis.Controller;
 import com.cis.Model.*;
 import com.cis.Utils.Constants;
 import com.cis.Utils.HTTPServer;
+import com.cis.Utils.SortPostByTime;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
+import java.util.TreeSet;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -19,16 +24,6 @@ public class ServerController implements HTTPServerListener {
     private Data data;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-    class SortPostByTime implements Comparator<String> {
-        @Override
-        public int compare(String postUID1, String postUID2) {
-            Post post1 = Data.getInstance().getPosts().get(postUID1);
-            Post post2 = Data.getInstance().getPosts().get(postUID2);
-
-            return (int) (post2.getCreationDate() - post1.getCreationDate());
-        }
-    }
 
     private ServerController() {
         data = Data.getInstance();
@@ -105,7 +100,9 @@ public class ServerController implements HTTPServerListener {
         else {
             hash = UUID.randomUUID().toString();
             posts = new TreeSet<>(new SortPostByTime());
-            posts.addAll(data.getPosts().keySet());
+            for (String postID : data.getPosts().keySet()) {
+                posts.add(postID);
+            }
             data.putPageTracking(hash, posts);
         }
 
@@ -161,6 +158,9 @@ public class ServerController implements HTTPServerListener {
         }
         double epochTime = (Instant.now().toEpochMilli() / 1000.0);
         if (post.getCreationDate() < epochTime - 86400) {
+            return Constants.FAILURE;
+        }
+        if (new Random().nextInt(3) != 0) {
             return Constants.FAILURE;
         }
         return Constants.SUCCESS;
@@ -224,7 +224,7 @@ public class ServerController implements HTTPServerListener {
         String username = (String) request.getParam(Constants.USERNAME_PARAM);
         String name = (String) request.getParam(Constants.NAME_PARAM);
 
-        User user = new User(id, username, name, bio, profilePictureURL, 0);
+        User user = new User(id, username, name, bio, profilePictureURL);
 
         if (data.getUsers().containsKey(id)) {
             return Constants.FAILURE;
@@ -381,6 +381,6 @@ public class ServerController implements HTTPServerListener {
 
     public void saveServer() {
         final Runnable save = Data::storeData;
-        scheduler.scheduleAtFixedRate(save, 10, 10, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(save, 1, 1, TimeUnit.MINUTES);
     }
 }

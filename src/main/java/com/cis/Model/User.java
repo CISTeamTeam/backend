@@ -1,6 +1,7 @@
 package com.cis.Model;
 
-import java.util.Comparator;
+import com.cis.Utils.SortPostByTime;
+
 import java.util.TreeSet;
 
 public class User {
@@ -12,16 +13,6 @@ public class User {
     private String profilePictureURL;
     private TreeSet<String> posts;
     private int points;
-
-    class SortPostByTime implements Comparator<String> {
-        @Override
-        public int compare(String postUID1, String postUID2) {
-            Post post1 = Data.getInstance().getPosts().get(postUID1);
-            Post post2 = Data.getInstance().getPosts().get(postUID2);
-
-            return (int) (post2.getCreationDate() - post1.getCreationDate());
-        }
-    }
 
     public User() {
         this.posts = new TreeSet<>(new SortPostByTime());
