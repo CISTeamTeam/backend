@@ -61,10 +61,12 @@ public class Data {
             instance = new ObjectMapper().readValue(dataString.toString(), Data.class);
         }
         catch (FileNotFoundException e) {
+            e.printStackTrace();
             AddExampleData.addData();
             storeData();
         }
         catch (MismatchedInputException e) {
+            e.printStackTrace();
             AddExampleData.addData();
             storeData();
         }
