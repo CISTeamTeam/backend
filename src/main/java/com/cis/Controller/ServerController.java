@@ -38,6 +38,7 @@ public class ServerController implements HTTPServerListener {
 
     @Override
     public String handleRequest(Request request) {
+        // Upon receiving HTTP request from client
         try {
             switch (request.getPath()) {
                 case Constants.CLEAR_DATA: return clearData(request);
@@ -64,6 +65,7 @@ public class ServerController implements HTTPServerListener {
         catch(Exception e) {
             e.printStackTrace();
         }
+        // If request did not match anything, fail
         return Constants.FAILURE;
     }
 
@@ -78,9 +80,13 @@ public class ServerController implements HTTPServerListener {
     /* ------------- */
 
     private String getPost(Request request) {
+        // Get id from request
         String id = (String) request.getParam(Constants.ID_PARAM);
+
+        // Get post using id
         Post post = data.getPosts().get(id);
         try {
+            // Return JSON
             return new ObjectMapper().writeValueAsString(post);
         }
         catch (JsonProcessingException e) {
@@ -130,6 +136,7 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String createPost(Request request) {
+        // Get various parameters from request
         String id = (String) request.getParam(Constants.ID_PARAM);
         String userID = (String) request.getParam(Constants.USER_ID_PARAM);
         String imageURL = (String) request.getParam(Constants.URL_PARAM);
@@ -138,9 +145,11 @@ public class ServerController implements HTTPServerListener {
 
         Post post = new Post(id, userID, imageURL, description, creationDate);
 
+        // If post already exists, fail
         if (data.getPosts().containsKey(id)) {
             return Constants.FAILURE;
         }
+        // Add post to data
         data.addPost(post);
 
         //TODO: Change back to 24 hours after testing
@@ -150,16 +159,22 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String canRatePost(Request request){
+        // Get parameters from request. ID_PARAM is the post id and USER_ID_PARAM the user id
         String postId = (String) request.getParam(Constants.ID_PARAM);
         String userId = (String) request.getParam(Constants.USER_ID_PARAM);
+
         Post post = data.getPosts().get(postId);
+        // If the user has already rated the post, fail
         if (post.getRatings().containsKey(userId)) {
             return Constants.FAILURE;
         }
+        // Convert epoch time from milliseconds to seconds
         double epochTime = (Instant.now().toEpochMilli() / 1000.0);
+        // If the post is more than 24 hours old, fail
         if (post.getCreationDate() < epochTime - 86400) {
             return Constants.FAILURE;
         }
+        // Random chance of failure
         if (new Random().nextInt(3) != 0) {
             return Constants.FAILURE;
         }
@@ -167,6 +182,7 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String ratePost(Request request) {
+        // Get parameters from request
         String id = (String) request.getParam(Constants.ID_PARAM);
         String userID = (String) request.getParam(Constants.USER_ID_PARAM);
         int rating = (Integer) request.getParam(Constants.RATING_PARAM);
@@ -174,16 +190,18 @@ public class ServerController implements HTTPServerListener {
         User user = data.getUsers().get(userID);
         Post post = data.getPosts().get(id);
 
+        // If post is more than 24 hours old, fail
         double epochTime = (Instant.now().toEpochMilli() / 1000.0);
         if (post.getCreationDate() < epochTime - 86400) {
             return Constants.FAILURE;
         }
-
+        // Rate post
         post.addRating(user.getId(), rating);
         return Constants.SUCCESS;
     }
 
     private String getPostPoints(Request request) {
+        // Get id from request
         String id = (String) request.getParam(Constants.ID_PARAM);
 
         int points = data.getPosts().get(id).getFinalRating();
@@ -196,8 +214,10 @@ public class ServerController implements HTTPServerListener {
     /* ------------- */
 
     private String authenticate(Request request){
+        // Get id from request
         String id = (String) request.getParam(Constants.ID_PARAM);
 
+        // If user already exists, return success
         if (data.getUsers().containsKey(id)){
             return Constants.SUCCESS;
         }
@@ -205,10 +225,12 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String getUser(Request request) {
+        // Get id from request
         String id = (String) request.getParam(Constants.ID_PARAM);
 
         User user = data.getUsers().get(id);
         try {
+            // Return JSON of user
             return new ObjectMapper().writeValueAsString(user);
         }
         catch (JsonProcessingException e) {
@@ -218,6 +240,7 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String createUser(Request request){
+        // Get parameters from request
         String id = (String) request.getParam(Constants.ID_PARAM);
         String bio = (String) request.getParam(Constants.BIO_PARAM);
         String profilePictureURL = (String) request.getParam(Constants.PFP_URL_PARAM);
@@ -226,6 +249,7 @@ public class ServerController implements HTTPServerListener {
 
         User user = new User(id, username, name, bio, profilePictureURL);
 
+        // If user already exists, fail
         if (data.getUsers().containsKey(id)) {
             return Constants.FAILURE;
         }
@@ -234,6 +258,7 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String updateUser(Request request){
+        // Get parameters from request
         String id = (String) request.getParam(Constants.ID_PARAM);
         String bio = (String) request.getParam(Constants.BIO_PARAM);
         String pfpURL = (String) request.getParam(Constants.PFP_URL_PARAM);
@@ -242,6 +267,7 @@ public class ServerController implements HTTPServerListener {
 
         User user = data.getUsers().get(id);
 
+        // Update user info
         user.setBio(bio);
         user.setProfilePictureURL(pfpURL);
         user.setUsername(username);
@@ -251,6 +277,7 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String getUserPoints(Request request) {
+        // Get id from request
         String id = (String) request.getParam(Constants.ID_PARAM);
 
         int points = data.getUsers().get(id).getPoints();
@@ -258,10 +285,12 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String spendPoints(Request request) {
+        // Get parameters from request
         String id = (String) request.getParam(Constants.ID_PARAM);
         int pointsSpent = (Integer) request.getParam(Constants.POINTS_PARAM);
 
         User user = data.getUsers().get(id);
+        // If user tries to spend more points than they currently have, fail
         if(user.getPoints()<pointsSpent){
             return Constants.FAILURE;
         }
@@ -275,6 +304,7 @@ public class ServerController implements HTTPServerListener {
     /* ---------------- */
 
     private String getComment(Request request){
+        // Get id from request
         String id = (String) request.getParam(Constants.ID_PARAM);
 
         Comment comment = data.getComments().get(id);
@@ -288,13 +318,15 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String postComment(Request request){
+        // Get parameters from request
         String id = (String) request.getParam(Constants.ID_PARAM);
         String authorId = (String) request.getParam(Constants.USER_ID_PARAM);
         String postId = (String) request.getParam(Constants.POST_ID_PARAM);
         String text = (String) request.getParam(Constants.TEXT_PARAM);
-        double creationDate = (Double) request.getParam(Constants.CREATION_DATE);
+        double creationDate = (Double) request.getParam(Constants.CREATION_DATE); // Date is in seconds
 
         Comment comment = new Comment(id, authorId, postId, text, creationDate);
+        // Add comment to post object
         data.getPosts().get(postId).addComment(id);
         data.addComment(comment);
 
@@ -307,6 +339,7 @@ public class ServerController implements HTTPServerListener {
     /* ----------------- */
 
     private String getDiscount(Request request) {
+        // Get id from request
         String id = (String) request.getParam(Constants.ID_PARAM);
 
         Discount discount = data.getDiscounts().get(id);
@@ -320,6 +353,7 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String getDiscounts(Request request) {
+        // Get all discount IDs
         ArrayList<String> discounts = new ArrayList<>(data.getDiscounts().keySet());
 
         try {
@@ -337,6 +371,7 @@ public class ServerController implements HTTPServerListener {
     /* ------------------ */
 
     private String getChallenge(Request request) {
+        // Get id from request
         String id = (String) request.getParam(Constants.ID_PARAM);
         Challenge challenge = data.getChallenges().get(id);
         try {
@@ -353,7 +388,7 @@ public class ServerController implements HTTPServerListener {
         while (it.hasNext()) {
             Challenge challenge = data.getChallenges().get(it.next());
             double epochTime = (Instant.now().toEpochMilli() / 1000.0);
-            if (epochTime <= challenge.getEndDate()) {
+            if (epochTime <= challenge.getEndDate()) { // If challenge is not over yet
                 challenges.add(challenge.getId());
             }
         }
@@ -373,7 +408,7 @@ public class ServerController implements HTTPServerListener {
 
     public static void main(String[] args) {
         Data.getInstance();
-        Data.restoreData();
+        Data.restoreData(); // Attempt to restore data from save.txt
         ServerController.getInstance().saveServer();
         HTTPServer server = new HTTPServer(ServerController.getInstance(), Constants.PORT);
         server.start();
