@@ -1,7 +1,9 @@
 package com.cis.Model;
 
+import com.cis.Controller.AddExampleData;
 import com.cis.Utils.Constants;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -59,7 +61,11 @@ public class Data {
             instance = new ObjectMapper().readValue(dataString.toString(), Data.class);
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            AddExampleData.addData();
+            storeData();
+        }
+        catch (MismatchedInputException e) {
+            AddExampleData.addData();
             storeData();
         }
         catch (Exception e) {

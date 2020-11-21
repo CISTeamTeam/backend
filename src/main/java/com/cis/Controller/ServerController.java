@@ -7,11 +7,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.TreeSet;
-import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ServerController implements HTTPServerListener {
 
@@ -348,20 +347,23 @@ public class ServerController implements HTTPServerListener {
         return Constants.FAILURE;
     }
 
-    private String getChallenges(Request request){
+    private String getChallenges(Request request) {
         ArrayList<String> challenges = new ArrayList<>();
-        for (String challengeID : data.getChallenges().keySet()) {
-            Challenge challenge = data.getChallenges().get(challengeID);
-            
+        Iterator it = data.getChallenges().keySet().iterator();
+        while (it.hasNext()) {
+            Challenge challenge = data.getChallenges().get(it.next());
+            double epochTime = (Instant.now().toEpochMilli() / 1000.0);
+            if (epochTime <= challenge.getEndDate()) {
+                challenges.add(challenge.getId());
+            }
         }
         try {
             return "{ \"challenges\": " + new ObjectMapper().writeValueAsString(challenges) + " }";
         }
         catch (JsonProcessingException e) {
             e.printStackTrace();
-            return Constants.FAILURE;
         }
-
+        return Constants.FAILURE;
     }
 
 
