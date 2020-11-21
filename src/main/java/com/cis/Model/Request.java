@@ -28,10 +28,6 @@ public class Request {
         return path;
     }
 
-    public String getParamsJSON() {
-        return paramsJSON;
-    }
-
     public Object getParam(String key) {
         return params.get(key);
     }

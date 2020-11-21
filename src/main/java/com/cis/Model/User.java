@@ -25,17 +25,17 @@ public class User {
 
     public User() {
         this.posts = new TreeSet<>(new SortPostByTime());
-        this.points = 0;
+        this.points = 400;
     }
 
-    public User(String id, String username, String name, String bio, String profilePictureURL, int points) {
+    public User(String id, String username, String name, String bio, String profilePictureURL) {
         this.id = id;
         this.username = username;
         this.name = name;
         this.bio = bio;
         this.profilePictureURL = profilePictureURL;
         this.posts = new TreeSet<>(new SortPostByTime());
-        this.points = points;
+        this.points = 400;
     }
 
     public String getId() {
