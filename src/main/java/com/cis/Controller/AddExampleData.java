@@ -6,6 +6,8 @@ public class AddExampleData {
 
     public static void addData() {
 
+        // Adds test data to the server
+
         Data data = Data.getInstance();
 
         System.out.println("Adding Example Data");

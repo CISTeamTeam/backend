@@ -51,6 +51,9 @@ public class Data {
     }
 
     public static void restoreData(){
+        // Called upon server initialization.
+        // Attempts to read save.txt and extract JSON-serialzed data.
+        // If it encounters an error populates itself with the data in AddExampleData.java
         try {
             File dataFile = new File(Constants.SAVE_FILE);
             Scanner scanner = new Scanner(dataFile);

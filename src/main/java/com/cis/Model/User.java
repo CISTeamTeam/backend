@@ -26,7 +26,7 @@ public class User {
         this.bio = bio;
         this.profilePictureURL = profilePictureURL;
         this.posts = new TreeSet<>(new SortPostByTime());
-        this.points = 400;
+        this.points = 400; // New users start with 400 points
     }
 
     public String getId() {
