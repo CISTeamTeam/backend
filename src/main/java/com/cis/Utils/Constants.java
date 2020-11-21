@@ -4,8 +4,6 @@ public class Constants {
     public static final int PORT = 8000;
     public static final String SAVE_FILE = "save.txt";
 
-    public static final int INITIAL_POINTS = 400;
-
     // Paths
     public static final String CLEAR_DATA = "/clearData";
     public static final String GET_POST = "/getPost";
