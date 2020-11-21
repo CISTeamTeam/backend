@@ -12,50 +12,43 @@ public class AddExampleData {
                               "leafuwu",
                               "Maia K",
                               "I love trees!",
-                              "https://i.imgur.com/0loCM3K.jpg",
-                              100));
+                              "https://i.imgur.com/0loCM3K.jpg"));
 
         data.addUser(new User("9c01220d-4acb-4282-b0b7-306fb2b9f9b1",
                               "grassguy",
                               "Gerald Smithers",
                               "Hope you guys like my account!",
-                              "https://i.imgur.com/N4jhbXl.jpg",
-                              100));
+                              "https://i.imgur.com/N4jhbXl.jpg"));
 
         data.addUser(new User("d2db228e-5d9d-4479-b81a-a9521ff5c63e",
                               "treebu",
                               "Nick",
                               "I post photos!",
-                              "https://i.imgur.com/hLtIC3a.jpg",
-                              100));
+                              "https://i.imgur.com/hLtIC3a.jpg"));
 
         data.addUser(new User("e2c61608-1d45-4eff-a052-23d688e30c8b",
                               "croissantdream",
                               "Loren",
                               "I'm loving Canopy!!",
-                              "https://i.imgur.com/8yyqjX0.jpg",
-                              100));
+                              "https://i.imgur.com/8yyqjX0.jpg"));
 
         data.addUser(new User("88a57326-3fd8-4adf-ae66-5e24a3561b44",
                               "tisaclam",
                               "Issa",
                               "Love trees like I love math",
-                              "https://i.imgur.com/SuQe1dW.jpg",
-                              100));
+                              "https://i.imgur.com/SuQe1dW.jpg"));
 
         data.addUser(new User("46d4b4e5-afed-42eb-87df-0208f0fbb113",
                               "OnlyJS",
                               "Julia",
                               "Swift is life!",
-                              "https://i.imgur.com/Oq6uwSK.jpg",
-                              100));
+                              "https://i.imgur.com/Oq6uwSK.jpg"));
 
         data.addUser(new User("8caff95c-1112-4e85-914f-a9b94d3d267b",
                               "eggbro",
                               "Brody",
                               "This app is so cool!",
-                              "https://i.imgur.com/HuQnH5B.jpg",
-                              100));
+                              "https://i.imgur.com/HuQnH5B.jpg"));
 
         data.addPost(new Post("61bede89-8de3-42d4-9cc8-351f57ded067",
                               "c28e6c3e-d720-482b-8062-ebb82798c600",
