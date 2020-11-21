@@ -8,6 +8,8 @@ public class AddExampleData {
 
         Data data = Data.getInstance();
 
+        System.out.println("Adding Example Data");
+
         data.addUser(new User("c28e6c3e-d720-482b-8062-ebb82798c600",
                               "leafuwu",
                               "Maia K",
