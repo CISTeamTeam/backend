@@ -2,7 +2,8 @@ package com.cis.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Post {
 
@@ -11,12 +12,14 @@ public class Post {
     private String url;
     private String description;
     private double creationDate;
+    private String challenge;
     private ArrayList<String> comments;
     private HashMap<String, Integer> ratings;
 
     public Post() {
         this.comments = new ArrayList<>();
         this.ratings = new HashMap<>();
+        this.challenge = null;
     }
 
     public Post(String id, String authorID, String url, String description, double creationDate) {
@@ -27,6 +30,7 @@ public class Post {
         this.creationDate = creationDate;
         this.comments = new ArrayList<>();
         this.ratings = new HashMap<>();
+        this.challenge = null;
     }
 
     public String getId() {
@@ -72,5 +76,9 @@ public class Post {
 
     public void addRating(String user, int rating) {
         this.ratings.put(user, rating);
+    }
+
+    public String getChallenge() {
+        return challenge;
     }
 }

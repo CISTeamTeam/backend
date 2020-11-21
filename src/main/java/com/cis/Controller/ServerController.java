@@ -293,6 +293,7 @@ public class ServerController implements HTTPServerListener {
         double creationDate = (Double) request.getParam(Constants.CREATION_DATE);
 
         Comment comment = new Comment(id, authorId, postId, text, creationDate);
+        data.getPosts().get(postId).addComment(id);
         data.addComment(comment);
 
         return Constants.SUCCESS;
@@ -345,7 +346,11 @@ public class ServerController implements HTTPServerListener {
     }
 
     private String getChallenges(Request request){
-        ArrayList<String> challenges = new ArrayList<>(data.getChallenges().keySet());
+        ArrayList<String> challenges = new ArrayList<>();
+        for (String challengeID : data.getChallenges().keySet()) {
+            Challenge challenge = data.getChallenges().get(challengeID);
+            
+        }
         try {
             return "{ \"challenges\": " + new ObjectMapper().writeValueAsString(challenges) + " }";
         }
