@@ -224,7 +224,7 @@ public class ServerController implements HTTPServerListener {
         String username = (String) request.getParam(Constants.USERNAME_PARAM);
         String name = (String) request.getParam(Constants.NAME_PARAM);
 
-        User user = new User(id, username, name, bio, profilePictureURL, Constants.INITIAL_POINTS);
+        User user = new User(id, username, name, bio, profilePictureURL);
 
         if (data.getUsers().containsKey(id)) {
             return Constants.FAILURE;
